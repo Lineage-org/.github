@@ -172,7 +172,7 @@ jobs:
           labels: |
             automated
             policy-sync
-            nixline
+            lineage
 
       - name: Direct push (fallback)
         id: push

@@ -327,7 +327,7 @@ jobs:
           labels: |
             automated
             policy-sync
-            nixline
+            lineage
             ${{ steps.pull.outputs.has_conflicts == 'true' && 'has-conflicts' || '' }}
             ${{ steps.validate.outputs.validation_errors > 0 && 'needs-review' || '' }}
 
