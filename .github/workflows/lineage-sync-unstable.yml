@@ -90,8 +90,8 @@ jobs:
           SOURCE_BRANCH="${{ inputs.source_branch }}"
           TARGET_BRANCH="${{ inputs.target_branch }}"
 
-          # Switch to target branch
-          git checkout $TARGET_BRANCH
+          # Switch to target branch (create/update local branch from remote)
+          git checkout -B $TARGET_BRANCH origin/$TARGET_BRANCH
 
           # Merge source branch into target
           if [ "${{ steps.check.outputs.merge_type }}" = "fast-forward" ]; then
