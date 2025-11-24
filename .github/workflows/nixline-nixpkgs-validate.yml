@@ -1,5 +1,5 @@
 #
-# NixLine Nixpkgs Validate (reusable)
+# Lineage Nixpkgs Validate (reusable)
 #
 # Validates nixpkgs versions before promotion to ensure stability and compatibility.
 # Runs comprehensive testing on specified nixpkgs tags to verify they work
@@ -10,7 +10,7 @@
 # Features: Tag validation, compatibility testing, stability checks
 #
 
-name: NixLine Nixpkgs Validate (reusable)
+name: Lineage Nixpkgs Validate (reusable)
 
 on:
   workflow_call:

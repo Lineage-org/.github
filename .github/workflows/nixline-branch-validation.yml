@@ -1,5 +1,5 @@
 #
-# NixLine Branch Validation (reusable)
+# Lineage Branch Validation (reusable)
 #
 # Validates feature branches and manages promotion to main through automated PRs.
 # Provides immediate feedback loop with unstable tag updates and comprehensive
@@ -19,13 +19,13 @@
 # Safety: All changes validated before reaching main branch
 #
 
-name: NixLine Branch Validation (reusable)
+name: Lineage Branch Validation (reusable)
 
 on:
   workflow_call:
     inputs:
       baseline_repo:
-        description: 'Baseline repository name (e.g., "org/nixline-baseline")'
+        description: 'Baseline repository name (e.g., "org/lineage-baseline")'
         required: true
         type: string
       validation_apps:

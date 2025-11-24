@@ -1,5 +1,5 @@
 #
-# NixLine CI (reusable) - Consumer Repository Workflow
+# Lineage CI (reusable) - Consumer Repository Workflow
 #
 # IMPORTANT: This workflow is designed for CONSUMER repositories that materialize
 # and validate policy files FROM a baseline repository.
@@ -12,7 +12,7 @@
 # Purpose: Materialize policies from baseline and validate compliance
 #
 
-name: NixLine CI (reusable)
+name: Lineage CI (reusable)
 on:
   workflow_call:
     inputs:
@@ -38,9 +38,9 @@ jobs:
           NIXLINE_PACKS: ${{ inputs.packs }}
           NIXLINE_SYNC_MODE: ${{ inputs.sync_mode }}
         run: |
-          nix run "github:NixLine-org/nixline-baseline?ref=${{ inputs.channel }}"#sync
+          nix run "github:Lineage-org/lineage-baseline?ref=${{ inputs.channel }}"#sync
       - name: Run org checks
         env:
           NIXLINE_PACKS: ${{ inputs.packs }}
         run: |
-          nix run "github:NixLine-org/nixline-baseline?ref=${{ inputs.channel }}"#check
+          nix run "github:Lineage-org/lineage-baseline?ref=${{ inputs.channel }}"#check

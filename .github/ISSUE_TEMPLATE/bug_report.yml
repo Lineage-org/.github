@@ -28,7 +28,7 @@ body:
       label: Component
       description: Which component is affected?
       options:
-        - NixLine Baseline
+        - Lineage Baseline
         - Reusable Workflows
         - Policy Packs
         - Sync App
@@ -51,10 +51,10 @@ body:
     id: consumption
     attributes:
       label: Consumption Pattern
-      description: How are you consuming NixLine?
+      description: How are you consuming Lineage?
       options:
         - Direct Consumption (github:org/baseline#sync)
-        - Configuration-Driven (.nixline.toml)
+        - Configuration-Driven (.lineage.toml)
         - Template-Based (flake.nix)
         - Not applicable
     validations:
@@ -113,7 +113,7 @@ body:
     id: config
     attributes:
       label: Configuration
-      description: Relevant configuration files (.nixline.toml, flake.nix, etc.)
+      description: Relevant configuration files (.lineage.toml, flake.nix, etc.)
       render: toml
 
   - type: input

@@ -1,5 +1,5 @@
 #
-# NixLine Dependabot Auto-merge (reusable)
+# Lineage Dependabot Auto-merge (reusable)
 #
 # Automatically merges Dependabot pull requests that meet safety criteria.
 # Approves and enables auto-merge for minor/patch version updates and
@@ -10,7 +10,7 @@
 # Safety: Only merges minor/patch updates and security fixes
 #
 
-name: NixLine Dependabot Auto-merge (reusable)
+name: Lineage Dependabot Auto-merge (reusable)
 on:
   workflow_call:
     inputs:

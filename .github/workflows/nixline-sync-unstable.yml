@@ -1,5 +1,5 @@
 #
-# NixLine Sync Unstable Branch (reusable)
+# Lineage Sync Unstable Branch (reusable)
 #
 # Merges main branch into unstable branch to maintain proper hierarchy.
 # Ensures unstable branch stays ahead of main after promotions by syncing
@@ -10,7 +10,7 @@
 # Features: Fast-forward and three-way merging, conflict detection, issue creation
 #
 
-name: NixLine Sync Unstable Branch (reusable)
+name: Lineage Sync Unstable Branch (reusable)
 
 on:
   workflow_call:

@@ -1,5 +1,5 @@
 #
-# NixLine Feature Branch Validation (reusable)
+# Lineage Feature Branch Validation (reusable)
 #
 # Comprehensive validation workflow for feature branch pull requests targeting
 # unstable branch. Runs security scans, code quality checks, Nix validation,
@@ -10,7 +10,7 @@
 # Features: CodeQL, dependency scan, flake check, YAML validation, commit message validation
 #
 
-name: NixLine Feature Branch Validation (reusable)
+name: Lineage Feature Branch Validation (reusable)
 
 on:
   workflow_call:

@@ -1,5 +1,5 @@
 #
-# NixLine Flake Lock Update (reusable)
+# Lineage Flake Lock Update (reusable)
 #
 # Updates flake.lock files in specified directories and optionally creates
 # pull requests with the changes. Supports validation after updates and
@@ -10,7 +10,7 @@
 # Features: Custom directories, commit messages, validation, PR creation, auto-merge
 #
 
-name: NixLine Flake Lock Update (reusable)
+name: Lineage Flake Lock Update (reusable)
 
 on:
   workflow_call:

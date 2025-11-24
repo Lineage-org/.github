@@ -1,5 +1,5 @@
 #
-# NixLine Promote to Stable (reusable)
+# Lineage Promote to Stable (reusable)
 #
 # Promotes commits from baseline repositories to stable with comprehensive validation.
 # Supports both stable (full audit trail with flake.lock updates) and unstable
@@ -13,10 +13,10 @@
 # - Creates issues on validation failures with detailed reports
 #
 # Called by: baseline repository promotion workflows
-# Purpose: Centralized, validated promotion logic across NixLine organization
+# Purpose: Centralized, validated promotion logic across Lineage organization
 #
 
-name: NixLine Promote to Stable (reusable)
+name: Lineage Promote to Stable (reusable)
 
 on:
   workflow_call:

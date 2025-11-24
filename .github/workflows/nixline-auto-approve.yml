@@ -1,5 +1,5 @@
 #
-# NixLine Auto-Approve (reusable)
+# Lineage Auto-Approve (reusable)
 #
 # Automatically approves and merges pull requests that match specified criteria.
 # Designed for automated PRs from trusted sources like github-actions[bot] with
@@ -10,7 +10,7 @@
 # Safety: Filters by PR title pattern and actor (default: github-actions[bot])
 #
 
-name: NixLine Auto-Approve (reusable)
+name: Lineage Auto-Approve (reusable)
 
 on:
   workflow_call:
@@ -79,7 +79,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🤖 **Auto-approved** by NixLine automation
+              body: `🤖 **Auto-approved** by Lineage automation
 
             **Approval criteria met:**
             - Actor: \`${{ github.actor }}\`

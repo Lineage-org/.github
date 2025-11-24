@@ -1,9 +1,9 @@
-# NixLine Reusable Workflows
+# Lineage Reusable Workflows
 
-[![Validate Workflows](https://github.com/NixLine-org/.github/actions/workflows/validate-workflows.yml/badge.svg)](https://github.com/NixLine-org/.github/actions/workflows/validate-workflows.yml)
-[![Update Stable Tag](https://github.com/NixLine-org/.github/actions/workflows/update-stable-tag.yml/badge.svg)](https://github.com/NixLine-org/.github/actions/workflows/update-stable-tag.yml)
+[![Validate Workflows](https://github.com/Lineage-org/.github/actions/workflows/validate-workflows.yml/badge.svg)](https://github.com/Lineage-org/.github/actions/workflows/validate-workflows.yml)
+[![Update Stable Tag](https://github.com/Lineage-org/.github/actions/workflows/update-stable-tag.yml/badge.svg)](https://github.com/Lineage-org/.github/actions/workflows/update-stable-tag.yml)
 
-This repository contains reusable GitHub Actions workflows for the NixLine organization.
+This repository contains reusable GitHub Actions workflows for the Lineage organization.
 
 **Workflow Quality:** All reusable workflows in this repository are automatically validated on every commit via the [`validate-workflows.yml`](.github/workflows/validate-workflows.yml) workflow. This ensures YAML syntax, GitHub Actions syntax and shell scripts are correct before workflows are tagged as stable and used across the organization.
 
@@ -28,20 +28,20 @@ This repository contains reusable GitHub Actions workflows for the NixLine organ
   - [Dependabot Auto-Merge Workflow](#dependabot-auto-merge-workflow)
   - [Stable Tag Update Workflow](#stable-tag-update-workflow)
 - [Workflow Documentation](#workflow-documentation)
-  - [Basic CI](#basic-ci-nixline-ciyml)
-  - [Feature Branch Validation](#feature-branch-validation-nixline-feature-branch-validationyml)
-  - [Policy Sync Smart (Recommended)](#policy-sync-smart-nixline-policy-sync-smartyml)
-  - [Policy Sync (Direct)](#policy-sync-nixline-policy-syncyml) **[DEPRECATED]**
-  - [Policy Sync with PRs](#policy-sync-with-auto-approved-prs-nixline-policy-sync-pryml) **[DEPRECATED]**
-  - [Auto-Approve](#auto-approve-nixline-auto-approveyml)
-  - [Dependabot Auto-Merge](#dependabot-auto-merge-nixline-dependabot-automergeyml)
-  - [Flake Updates](#flake-updates-nixline-flake-updateyml)
-  - [Policy Lock Updates](#policy-lock-updates-nixline-policy-flake-lock-onlyyml)
-  - [Pre-commit Hooks](#pre-commit-hooks-nixline-pre-commityml)
-  - [Branch Sync](#branch-sync-nixline-sync-unstableyml)
+  - [Basic CI](#basic-ci-lineage-ciyml)
+  - [Feature Branch Validation](#feature-branch-validation-lineage-feature-branch-validationyml)
+  - [Policy Sync Smart (Recommended)](#policy-sync-smart-lineage-policy-sync-smartyml)
+  - [Policy Sync (Direct)](#policy-sync-lineage-policy-syncyml) **[DEPRECATED]**
+  - [Policy Sync with PRs](#policy-sync-with-auto-approved-prs-lineage-policy-sync-pryml) **[DEPRECATED]**
+  - [Auto-Approve](#auto-approve-lineage-auto-approveyml)
+  - [Dependabot Auto-Merge](#dependabot-auto-merge-lineage-dependabot-automergeyml)
+  - [Flake Updates](#flake-updates-lineage-flake-updateyml)
+  - [Policy Lock Updates](#policy-lock-updates-lineage-policy-flake-lock-onlyyml)
+  - [Pre-commit Hooks](#pre-commit-hooks-lineage-pre-commityml)
+  - [Branch Sync](#branch-sync-lineage-sync-unstableyml)
   - [Stable Tag Updates](#stable-tag-updates-update-stable-tagyml)
   - [Workflow Validation](#workflow-validation-validate-workflowsyml)
-  - [Flake Lock Updates](#flake-lock-updates-nixline-flake-lock-updateyml)
+  - [Flake Lock Updates](#flake-lock-updates-lineage-flake-lock-updateyml)
   - [Governance Migration](#governance-migration-migrate-governanceyml)
   - [Test Governance Migration](#test-governance-migration-test-governance-migrationyml)
   - [Supply Chain Security Workflows](#supply-chain-security-workflows)
@@ -56,7 +56,7 @@ This repository contains reusable GitHub Actions workflows for the NixLine organ
 
 ## Overview
 
-This is the special `.github` repository that provides **reusable workflows** for all repositories in the NixLine organization. These workflows enforce consistent CI/CD practices, policy compliance and automation across the entire organization.
+This is the special `.github` repository that provides **reusable workflows** for all repositories in the Lineage organization. These workflows enforce consistent CI/CD practices, policy compliance and automation across the entire organization.
 
 ### What is This Repository?
 
@@ -65,19 +65,19 @@ GitHub allows organizations to create a special repository named `.github` that 
 - Host **reusable workflows** that any repo in the org can call
 - Define **organization-wide templates** and standards
 
-**NixLine uses this repository for:** Reusable CI/CD workflows that integrate with the NixLine baseline.
+**Lineage uses this repository for:** Reusable CI/CD workflows that integrate with the Lineage baseline.
 
 ---
 
 ## Architecture
 
-NixLine uses a three-repository architecture with instant policy materialization. Consumer repositories can use either template-based or direct consumption patterns:
+Lineage uses a three-repository architecture with instant policy materialization. Consumer repositories can use either template-based or direct consumption patterns:
 
 ```mermaid
 graph TB
     A[".github<br/><br/>Reusable Workflows<br/><br/>Auto-commits policy changes"]
     B["Consumer Repos<br/><br/>Template-based or Direct consumption"]
-    C["nixline-baseline<br/><br/>Policy Definitions<br/><br/>Source of truth"]
+    C["lineage-baseline<br/><br/>Policy Definitions<br/><br/>Source of truth"]
 
     B -->|"calls workflow"| A
     B -->|"references baseline"| C
@@ -89,11 +89,11 @@ graph TB
     style C fill:#FFFFFF,stroke:#333,stroke-width:3px,color:#000000,padding:20px
 ```
 
-The **`.github`** repository (this repo) contains reusable workflows that auto-commit policy updates. The **`nixline-baseline`** repository stores policy packs and Nix apps. **Consumer repos** are your actual projects with automated sync enabled.
+The **`.github`** repository (this repo) contains reusable workflows that auto-commit policy updates. The **`lineage-baseline`** repository stores policy packs and Nix apps. **Consumer repos** are your actual projects with automated sync enabled.
 
 **Three consumption patterns:**
 - **Direct (Default):** `nix run github:org/baseline#sync` - no configuration files needed
-- **Configuration-driven (Recommended):** `nix run github:org/baseline#sync -- --config .nixline.toml` - organization branding via TOML
+- **Configuration-driven (Recommended):** `nix run github:org/baseline#sync -- --config .lineage.toml` - organization branding via TOML
 - **Template-based:** Consumer repos have `flake.nix` with baseline as input for external packs
 
 **Instant materialization:** Policy changes are pushed directly to consumer repos without PR bottlenecks. Organizations requiring review can use branch protection rules.
@@ -106,7 +106,7 @@ The **`.github`** repository (this repo) contains reusable workflows that auto-c
 
 ### Reusable Workflow Security Model
 
-NixLine follows GitHub's security best practices for reusable workflows by **not defining permissions** in the reusable workflows themselves. This gives calling workflows complete control over what permissions to grant.
+Lineage follows GitHub's security best practices for reusable workflows by **not defining permissions** in the reusable workflows themselves. This gives calling workflows complete control over what permissions to grant.
 
 ```mermaid
 graph TD
@@ -137,9 +137,9 @@ graph TD
 
 | Reusable Workflow | Required Permissions | Purpose |
 |-------------------|---------------------|---------|
-| `nixline-ci.yml` | `contents: read` | Checkout repository for CI checks |
-| `nixline-policy-sync-smart.yml` | `contents: write`<br/>`pull-requests: write`<br/>`issues: write` | Commit or create PRs<br/>Manage PRs<br/>Create issues for conflicts |
-| `nixline-policy-sync.yml` | `contents: write`<br/>`issues: write` | **[DEPRECATED]** Commit policy updates<br/>Create issues for conflicts |
+| `lineage-ci.yml` | `contents: read` | Checkout repository for CI checks |
+| `lineage-policy-sync-smart.yml` | `contents: write`<br/>`pull-requests: write`<br/>`issues: write` | Commit or create PRs<br/>Manage PRs<br/>Create issues for conflicts |
+| `lineage-policy-sync.yml` | `contents: write`<br/>`issues: write` | **[DEPRECATED]** Commit policy updates<br/>Create issues for conflicts |
 | `migrate-governance.yml` | `contents: write`<br/>`pull-requests: write`<br/>`actions: read` | Commit generated baseline<br/>Create PR (when using PR mode)<br/>Read workflow artifacts |
 | `test-governance-migration.yml` | `contents: read`<br/>`actions: read` | Clone external repositories<br/>Upload migration reports |
 
@@ -155,7 +155,7 @@ permissions:
 
 jobs:
   test:
-    uses: NixLine-org/.github/.github/workflows/nixline-ci.yml@stable
+    uses: Lineage-org/.github/.github/workflows/lineage-ci.yml@stable
 ```
 
 **Insecure Usage:**
@@ -167,7 +167,7 @@ permissions: write-all  # Over-privileged!
 
 jobs:
   test:
-    uses: NixLine-org/.github/.github/workflows/nixline-ci.yml@stable
+    uses: Lineage-org/.github/.github/workflows/lineage-ci.yml@stable
 ```
 
 ### Security Considerations
@@ -181,35 +181,35 @@ jobs:
 
 ## Available Workflows
 
-This repository provides several reusable workflows for NixLine automation. Each workflow serves a specific purpose in the governance and automation pipeline.
+This repository provides several reusable workflows for Lineage automation. Each workflow serves a specific purpose in the governance and automation pipeline.
 
 ### Overview
 
 | Workflow | Purpose | Used By | Pattern |
 |----------|---------|---------|---------|
-| `nixline-ci.yml` | Basic CI validation | All consumer repos | All patterns |
-| `nixline-feature-branch-validation.yml` | **Comprehensive feature branch validation with security checks** | Baseline repos | Secure feature branch validation |
-| `nixline-branch-validation.yml` | **Complete automation: unstable → main → stable** | Baseline repos | Complete automation workflow |
-| `nixline-policy-sync-smart.yml` | **Smart policy sync (RECOMMENDED)** | Consumer repos | Adaptive |
-| `nixline-promote-to-stable.yml` | **Promote commits to stable with validation and audit trail** | Baseline repos | Release management |
-| `nixline-sync-unstable.yml` | **Sync unstable branch with main to maintain hierarchy** | Baseline repos | Branch management |
-| `nixline-stable-candidate-update.yml` | **Update .stable-candidate tracking file with automation safeguards** | Baseline repos | Stable candidate management |
-| `nixline-policy-sync.yml` | ~~Direct policy sync~~ **DEPRECATED** | Legacy only | Direct commit |
-| `nixline-policy-sync-pr.yml` | ~~Policy sync with PRs~~ **DEPRECATED** | Legacy only | Auto-approved PRs |
-| `nixline-auto-approve.yml` | Auto-approve PRs | Consumer repos | Auto-approved PRs |
-| `nixline-dependabot-automerge.yml` | Dependabot auto-merge | Consumer repos | Dependency automation |
-| `nixline-flake-update.yml` | Flake lock updates | Template-based repos | Template pattern |
-| `nixline-policy-flake-lock-only.yml` | Policy lock updates | Template-based repos | Template pattern |
-| `nixline-pre-commit.yml` | Pre-commit hooks | Consumer repos | Code formatting |
+| `lineage-ci.yml` | Basic CI validation | All consumer repos | All patterns |
+| `lineage-feature-branch-validation.yml` | **Comprehensive feature branch validation with security checks** | Baseline repos | Secure feature branch validation |
+| `lineage-branch-validation.yml` | **Complete automation: unstable → main → stable** | Baseline repos | Complete automation workflow |
+| `lineage-policy-sync-smart.yml` | **Smart policy sync (RECOMMENDED)** | Consumer repos | Adaptive |
+| `lineage-promote-to-stable.yml` | **Promote commits to stable with validation and audit trail** | Baseline repos | Release management |
+| `lineage-sync-unstable.yml` | **Sync unstable branch with main to maintain hierarchy** | Baseline repos | Branch management |
+| `lineage-stable-candidate-update.yml` | **Update .stable-candidate tracking file with automation safeguards** | Baseline repos | Stable candidate management |
+| `lineage-policy-sync.yml` | ~~Direct policy sync~~ **DEPRECATED** | Legacy only | Direct commit |
+| `lineage-policy-sync-pr.yml` | ~~Policy sync with PRs~~ **DEPRECATED** | Legacy only | Auto-approved PRs |
+| `lineage-auto-approve.yml` | Auto-approve PRs | Consumer repos | Auto-approved PRs |
+| `lineage-dependabot-automerge.yml` | Dependabot auto-merge | Consumer repos | Dependency automation |
+| `lineage-flake-update.yml` | Flake lock updates | Template-based repos | Template pattern |
+| `lineage-policy-flake-lock-only.yml` | Policy lock updates | Template-based repos | Template pattern |
+| `lineage-pre-commit.yml` | Pre-commit hooks | Consumer repos | Code formatting |
 | `update-stable-tag.yml` | Auto-update stable tags | Baseline repos | Tag automation |
 | `validate-workflows.yml` | Validate YAML and GitHub Actions syntax | Any repo | Workflow quality control |
 | `test-dependabot-updates.yml` | **Test Dependabot dependency updates** | .github repo | Dependency safety testing |
-| `nixline-flake-lock-update.yml` | Update flake.lock files | Any repo with flakes | Dependency management |
+| `lineage-flake-lock-update.yml` | Update flake.lock files | Any repo with flakes | Dependency management |
 | `migrate-governance.yml` | Migrate governance repositories | Organizations | Governance migration |
 | `test-governance-migration.yml` | Test migration compatibility | Governance repos | Migration testing |
-| `nixline-nixpkgs-update.yml` | Fetch latest nixpkgs commit | Baseline repos | Supply chain security |
-| `nixline-nixpkgs-validate.yml` | Validate nixpkgs updates | Baseline repos | Supply chain security |
-| `nixline-nixpkgs-promote.yml` | Promote validated updates | Baseline repos | Supply chain security |
+| `lineage-nixpkgs-update.yml` | Fetch latest nixpkgs commit | Baseline repos | Supply chain security |
+| `lineage-nixpkgs-validate.yml` | Validate nixpkgs updates | Baseline repos | Supply chain security |
+| `lineage-nixpkgs-promote.yml` | Promote validated updates | Baseline repos | Supply chain security |
 
 ### CI Workflow
 
@@ -221,7 +221,7 @@ graph TD
     C --> D{Consumption<br/>Pattern?}
     D -->|Template| E[nix run .#check]
     D -->|Direct| F[nix run github:ORG/baseline#check]
-    D -->|Config-Driven| G[nix run github:ORG/baseline#check<br/>--config .nixline.toml]
+    D -->|Config-Driven| G[nix run github:ORG/baseline#check<br/>--config .lineage.toml]
     E --> H{Policies<br/>In Sync?}
     F --> H
     G --> H
@@ -296,9 +296,9 @@ permissions:
 
 jobs:
   validate:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-branch-validation.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-branch-validation.yml@stable
     with:
-      baseline_repo: YOUR-ORG/nixline-baseline
+      baseline_repo: YOUR-ORG/lineage-baseline
       validation_apps: "sync,check,import-policy,fetch-license,list-licenses"
       issue_labels: "validation-failure,automated"
 ```
@@ -337,12 +337,12 @@ The automation pipeline for baseline repositories provides end-to-end automation
 graph TD
     A[Push to main] --> B[Baseline CI<br/>Validation]
     B --> C{Validation<br/>Passed?}
-    C -->|Yes| D[Update Stable Candidate<br/>nixline-stable-candidate-update.yml]
+    C -->|Yes| D[Update Stable Candidate<br/>lineage-stable-candidate-update.yml]
     C -->|No| E[❌ Build Fails]
 
     D --> F[Create PR with<br/>Candidate Update]
     F --> G[Auto-merge PR]
-    G --> H[Trigger Stable Promotion<br/>nixline-promote-to-stable.yml]
+    G --> H[Trigger Stable Promotion<br/>lineage-promote-to-stable.yml]
 
     H --> I[Comprehensive Validation<br/>• Flake check<br/>• App verification<br/>• Content validation]
     I --> J{Promotion<br/>Validation?}
@@ -401,7 +401,7 @@ jobs:
           nix run .#create-pack -- --list-examples
 
   update-stable-candidate:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-stable-candidate-update.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-stable-candidate-update.yml@stable
     needs: validate-baseline
     if: |
       (github.event_name == 'push' && github.ref == 'refs/heads/main' &&
@@ -434,7 +434,7 @@ jobs:
             });
 ```
 
-#### Stable Candidate Management (`nixline-stable-candidate-update.yml`)
+#### Stable Candidate Management (`lineage-stable-candidate-update.yml`)
 **Purpose**: Safely update .stable-candidate tracking file with automation safeguards
 
 **Key Features**:
@@ -446,7 +446,7 @@ jobs:
 
 **Integration**: Called automatically by baseline CI workflows
 
-#### Stable Tag Promotion (`nixline-promote-to-stable.yml`)
+#### Stable Tag Promotion (`lineage-promote-to-stable.yml`)
 **Purpose**: Promote validated commits to stable with comprehensive validation and audit trail
 
 **Key Features**:
@@ -488,14 +488,14 @@ permissions:
 jobs:
   promote-pr:
     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'promote-to-stable')
-    uses: YOUR-ORG/.github/.github/workflows/nixline-promote-to-stable.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-promote-to-stable.yml@stable
     with:
       promotion_mode: pr-based
       stable_tag: stable
 
   promote-manual:
     if: github.event_name == 'workflow_dispatch'
-    uses: YOUR-ORG/.github/.github/workflows/nixline-promote-to-stable.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-promote-to-stable.yml@stable
     with:
       promotion_mode: ${{ github.event.inputs.automation_trigger == 'true' && 'automated' || 'manual' }}
       commit_hash: ${{ github.event.inputs.commit_hash }}
@@ -542,9 +542,9 @@ jobs:
 
 ## Workflow Documentation
 
-### Basic CI ([`nixline-ci.yml`](.github/workflows/nixline-ci.yml))
+### Basic CI ([`lineage-ci.yml`](.github/workflows/lineage-ci.yml))
 
-**CONSUMER REPOSITORIES ONLY** - Provides fundamental CI validation for NixLine consumer repositories including policy compliance checks and basic testing.
+**CONSUMER REPOSITORIES ONLY** - Provides fundamental CI validation for Lineage consumer repositories including policy compliance checks and basic testing.
 
 **IMPORTANT:** This workflow is designed specifically for consumer repositories that materialize and validate policy files FROM a baseline repository. Do NOT use for baseline repositories.
 
@@ -561,14 +561,14 @@ jobs:
 **Usage:**
 ```yaml
 jobs:
-  nixline-ci:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-ci.yml@stable
+  lineage-ci:
+    uses: YOUR-ORG/.github/.github/workflows/lineage-ci.yml@stable
     with:
       channel: stable
       consumption_pattern: direct  # or configuration-driven, template-based
 ```
 
-### Feature Branch Validation ([`nixline-feature-branch-validation.yml`](.github/workflows/nixline-feature-branch-validation.yml))
+### Feature Branch Validation ([`lineage-feature-branch-validation.yml`](.github/workflows/lineage-feature-branch-validation.yml))
 
 **BASELINE REPOSITORIES** - Comprehensive security and quality validation for pull requests targeting protected branches (e.g., unstable). Enforces strict standards before allowing feature branch merges.
 
@@ -606,7 +606,7 @@ permissions:
 
 jobs:
   validate:
-    uses: NixLine-org/.github/.github/workflows/nixline-feature-branch-validation.yml@stable
+    uses: Lineage-org/.github/.github/workflows/lineage-feature-branch-validation.yml@stable
     with:
       target_branch: unstable
       validation_apps: "sync,check,import-policy,fetch-license,list-licenses"
@@ -620,7 +620,7 @@ jobs:
 - Restrict direct pushes to `unstable` branch
 - Require branches to be up to date
 
-### Branch Validation (`nixline-branch-validation.yml`)
+### Branch Validation (`lineage-branch-validation.yml`)
 
 Provides comprehensive branch-based development workflow for baseline repositories with automated validation, PR creation, and issue management.
 
@@ -647,9 +647,9 @@ permissions:
 
 jobs:
   validate:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-branch-validation.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-branch-validation.yml@stable
     with:
-      baseline_repo: YOUR-ORG/nixline-baseline
+      baseline_repo: YOUR-ORG/lineage-baseline
       validation_apps: "sync,check,import-policy,fetch-license,list-licenses"
       issue_labels: "validation-failure,automated"
 ```
@@ -657,7 +657,7 @@ jobs:
 **Configuration Options:**
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `baseline_repo` | string | Required | Repository name (e.g., "org/nixline-baseline") |
+| `baseline_repo` | string | Required | Repository name (e.g., "org/lineage-baseline") |
 | `validation_apps` | string | `sync,check,import-policy,fetch-license,list-licenses` | Apps to validate (comma-separated) |
 | `issue_labels` | string | `validation-failure,automated` | Labels for validation failure issues |
 
@@ -671,7 +671,7 @@ jobs:
 
 Visual representation of how each workflow operates:
 
-### Policy Sync Smart (`nixline-policy-sync-smart.yml`)
+### Policy Sync Smart (`lineage-policy-sync-smart.yml`)
 
 The **recommended** unified policy sync workflow that intelligently handles all synchronization scenarios with automatic fallback patterns and rate limit protection for organizations managing hundreds of repositories.
 
@@ -742,10 +742,10 @@ permissions:
 
 jobs:
   sync:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-policy-sync-smart.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-policy-sync-smart.yml@stable
     with:
       consumption_pattern: direct
-      baseline_repo: YOUR-ORG/nixline-baseline
+      baseline_repo: YOUR-ORG/lineage-baseline
       baseline_ref: main
       prefer_pr: false         # Try direct push first (default)
       auto_merge: true         # Enable auto-merge if PR created
@@ -757,8 +757,8 @@ jobs:
 |-----------|------|---------|-------------|
 | `baseline_ref` | string | `main` | Baseline branch/tag to sync from |
 | `consumption_pattern` | string | `direct` | Pattern: direct, template-based, or configuration-driven |
-| `baseline_repo` | string | `NixLine-org/nixline-baseline` | Baseline repository |
-| `config_file` | string | `.nixline.toml` | Config file for configuration-driven pattern |
+| `baseline_repo` | string | `Lineage-org/lineage-baseline` | Baseline repository |
+| `config_file` | string | `.lineage.toml` | Config file for configuration-driven pattern |
 | `prefer_pr` | boolean | `false` | Always create PR even if direct push would work |
 | `auto_merge` | boolean | `true` | Enable auto-merge on PRs |
 | `stagger_minutes` | number | `5` | Max random delay in minutes for rate limiting |
@@ -779,7 +779,7 @@ The workflow includes automatic protection against GitHub API rate limits (80 PR
 
 ### Policy Sync Workflow Comparison
 
-**Direct Commit Pattern (`nixline-policy-sync.yml`):**
+**Direct Commit Pattern (`lineage-policy-sync.yml`):**
 ```mermaid
 graph TD
     A[Scheduled/Manual Trigger] --> B[Checkout Repository]
@@ -799,7 +799,7 @@ graph TD
     style J fill:#f8d7da
 ```
 
-**Pull Request Pattern (`nixline-policy-sync-pr.yml`):**
+**Pull Request Pattern (`lineage-policy-sync-pr.yml`):**
 ```mermaid
 graph TD
     A[Scheduled/Manual Trigger] --> B[Checkout Repository]
@@ -839,13 +839,13 @@ graph TD
 | **Enterprise Ready** | Basic | Full compliance features |
 | **Best For** | Simple repos, fast updates | Enterprise, audit requirements |
 
-### Policy Sync (`nixline-policy-sync.yml`) **[DEPRECATED]**
+### Policy Sync (`lineage-policy-sync.yml`) **[DEPRECATED]**
 
-⚠️ **This workflow is deprecated. Use [`nixline-policy-sync-smart.yml`](#policy-sync-smart-nixline-policy-sync-smartyml) instead.**
+⚠️ **This workflow is deprecated. Use [`lineage-policy-sync-smart.yml`](#policy-sync-smart-lineage-policy-sync-smartyml) instead.**
 
 Automatically syncs policy files from the baseline repository with instant materialization via direct commits.
 
-**Included in:** Consumer template (`nixline-baseline/templates/consumer/.github/workflows/policy-sync.yml`)
+**Included in:** Consumer template (`lineage-baseline/templates/consumer/.github/workflows/policy-sync.yml`)
 
 **Usage:**
 
@@ -859,7 +859,7 @@ on:
   workflow_dispatch:
 jobs:
   sync:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-policy-sync.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-policy-sync.yml@stable
     with:
       consumption_pattern: template-based
       baseline_ref: stable
@@ -875,13 +875,13 @@ on:
   workflow_dispatch:
 jobs:
   sync:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-policy-sync.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-policy-sync.yml@stable
     with:
       consumption_pattern: direct
-      baseline_repo: YOUR-ORG/nixline-baseline
+      baseline_repo: YOUR-ORG/lineage-baseline
       baseline_ref: stable
       # Optional: specify configuration file for organization branding
-      config_file: .nixline.toml
+      config_file: .lineage.toml
 ```
 
 **What it does:**
@@ -890,13 +890,13 @@ The workflow runs sync/check commands to validate policies. If out of sync, it m
 
 **Command patterns used:**
 - **Template-based repos:** `nix run .#check` and `nix run .#sync`
-- **Direct consumption repos:** `nix run github:ORG/nixline-baseline#check` and `nix run github:ORG/nixline-baseline#sync`
-- **Configuration-driven repos:** `nix run github:ORG/nixline-baseline#sync -- --config .nixline.toml`
+- **Direct consumption repos:** `nix run github:ORG/lineage-baseline#check` and `nix run github:ORG/lineage-baseline#sync`
+- **Configuration-driven repos:** `nix run github:ORG/lineage-baseline#sync -- --config .lineage.toml`
 
 **Key advantage:** Traditional governance systems create pull requests for every baseline update, requiring manual review across potentially hundreds of repositories. This workflow eliminates that bottleneck by materializing changes instantly through Nix flakes and committing them automatically. Policy updates propagate immediately without manual intervention.
 
 **Enhanced baseline features:**
-- **Runtime configuration passing**: Organizations can customize policies via `.nixline.toml` without forking
+- **Runtime configuration passing**: Organizations can customize policies via `.lineage.toml` without forking
 - **CLI overrides**: `--override org.name=MyCompany` for runtime customization
 - **Custom file support**: Complete file override capability with `custom_file` parameters
 - **Parameterized packs**: All policy packs accept configuration for organization branding
@@ -912,9 +912,9 @@ schedule:
   #- cron: '0 9 * * 1'   # Monday 9 AM UTC
 ```
 
-### Policy Sync with Auto-Approved PRs (`nixline-policy-sync-pr.yml`) **[DEPRECATED]**
+### Policy Sync with Auto-Approved PRs (`lineage-policy-sync-pr.yml`) **[DEPRECATED]**
 
-⚠️ **This workflow is deprecated. Use [`nixline-policy-sync-smart.yml`](#policy-sync-smart-nixline-policy-sync-smartyml) with `prefer_pr: true` instead.**
+⚠️ **This workflow is deprecated. Use [`lineage-policy-sync-smart.yml`](#policy-sync-smart-lineage-policy-sync-smartyml) with `prefer_pr: true` instead.**
 
 Creates pull requests for policy updates with optional auto-approval for enterprise governance requirements.
 
@@ -941,10 +941,10 @@ permissions:
 
 jobs:
   sync:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-policy-sync-pr.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-policy-sync-pr.yml@stable
     with:
       consumption_pattern: direct
-      baseline_repo: YOUR-ORG/nixline-baseline
+      baseline_repo: YOUR-ORG/lineage-baseline
       baseline_ref: stable
       create_pr: true
       auto_approve: true
@@ -960,7 +960,7 @@ on:
 
 jobs:
   auto-approve:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-auto-approve.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-auto-approve.yml@stable
     with:
       pr_title_pattern: "Policy Sync"
       actor_filter: "github-actions[bot]"
@@ -975,7 +975,7 @@ jobs:
 3. Add the auto-approval workflow to consumer repositories
 4. Ensure CI checks validate policy changes before merge
 
-**Demonstrated in:** [nixline-demo3](https://github.com/NixLine-org/nixline-demo3) showcases this pattern with pure upstream consumption and zero maintenance overhead.
+**Demonstrated in:** [lineage-demo3](https://github.com/Lineage-org/lineage-demo3) showcases this pattern with pure upstream consumption and zero maintenance overhead.
 
 ### Auto-Approve Workflow
 
@@ -1002,7 +1002,7 @@ graph TD
     style L fill:#d4edda
 ```
 
-### Auto-Approve (`nixline-auto-approve.yml`)
+### Auto-Approve (`lineage-auto-approve.yml`)
 
 Reusable workflow for automatically approving and merging PRs that meet specified criteria.
 
@@ -1023,7 +1023,7 @@ on:
 
 jobs:
   auto-approve:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-auto-approve.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-auto-approve.yml@stable
     with:
       pr_title_pattern: "Policy Sync"  # Pattern to match in PR title
       actor_filter: "github-actions[bot]"  # Must be created by this actor
@@ -1068,7 +1068,7 @@ graph TD
     style F fill:#f8d7da
 ```
 
-### Dependabot Auto-Merge (`nixline-dependabot-automerge.yml`)
+### Dependabot Auto-Merge (`lineage-dependabot-automerge.yml`)
 
 Automatically approves and merges Dependabot PRs for patch and minor updates when CI passes.
 
@@ -1089,7 +1089,7 @@ on:
 jobs:
   automerge:
     if: github.actor == 'dependabot[bot]'
-    uses: YOUR-ORG/.github/.github/workflows/nixline-dependabot-automerge.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-dependabot-automerge.yml@stable
 ```
 
 **Merge Policy:**
@@ -1097,7 +1097,7 @@ jobs:
 - Minor updates (1.0.0 → 1.1.0): Auto-merge
 - Major updates (1.0.0 → 2.0.0): Require manual review
 
-### Flake Updates (`nixline-flake-update.yml`)
+### Flake Updates (`lineage-flake-update.yml`)
 
 Updates flake.lock files for template-based repositories to keep dependencies current.
 
@@ -1118,10 +1118,10 @@ on:
 
 jobs:
   update:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-flake-update.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-flake-update.yml@stable
 ```
 
-### Policy Lock Updates (`nixline-policy-flake-lock-only.yml`)
+### Policy Lock Updates (`lineage-policy-flake-lock-only.yml`)
 
 Updates only the baseline policy flake lock for template-based repositories.
 
@@ -1142,7 +1142,7 @@ on:
 
 jobs:
   update:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-policy-flake-lock-only.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-policy-flake-lock-only.yml@stable
 ```
 
 ### Pre-commit Hooks Workflow
@@ -1172,7 +1172,7 @@ graph TD
     style M fill:#cfe2ff
 ```
 
-### Pre-commit Hooks (`nixline-pre-commit.yml`)
+### Pre-commit Hooks (`lineage-pre-commit.yml`)
 
 Runs pre-commit hooks with optional auto-fixing for code formatting and linting.
 
@@ -1197,7 +1197,7 @@ permissions:
 
 jobs:
   pre-commit:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-pre-commit.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-pre-commit.yml@stable
     with:
       auto_fix: true  # Auto-commit fixes
       run_on_all_files: false  # Only check changed files
@@ -1248,7 +1248,7 @@ graph TD
 
 **Important:** This workflow runs automatically on every push to main, ensuring consumer repos always reference the latest stable code.
 
-### Branch Sync (`nixline-sync-unstable.yml`)
+### Branch Sync (`lineage-sync-unstable.yml`)
 Maintains proper branch hierarchy by syncing main branch changes into unstable branch.
 
 **Purpose:** Keeps unstable branch ahead of main after promotions by merging latest main commits into unstable. Essential for maintaining the correct development workflow where unstable→main→stable.
@@ -1277,7 +1277,7 @@ permissions:
   issues: write
 jobs:
   sync-unstable:
-    uses: NixLine-org/.github/.github/workflows/nixline-sync-unstable.yml@stable
+    uses: Lineage-org/.github/.github/workflows/lineage-sync-unstable.yml@stable
     with:
       target_branch: unstable
       source_branch: main
@@ -1368,7 +1368,7 @@ The workflow automatically runs in the .github repository on every push and pull
 
 ---
 
-### Flake Lock Updates (`nixline-flake-lock-update.yml`)
+### Flake Lock Updates (`lineage-flake-lock-update.yml`)
 
 Automatically updates flake.lock files when flake.nix changes or on demand.
 
@@ -1398,7 +1398,7 @@ permissions:
 
 jobs:
   update-flake-lock:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-flake-lock-update.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-flake-lock-update.yml@stable
     with:
       flake-directory: 'templates/consumer'
       commit-message: 'Update consumer template flake.lock'
@@ -1423,7 +1423,7 @@ jobs:
 ```yaml
 jobs:
   update-flake-lock:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-flake-lock-update.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-flake-lock-update.yml@stable
     with:
       flake-directory: 'templates/consumer'
       commit-message: 'Update consumer template flake.lock'
@@ -1438,7 +1438,7 @@ permissions:
 
 jobs:
   update-flake-lock:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-flake-lock-update.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-flake-lock-update.yml@stable
     with:
       flake-directory: 'templates/consumer'
       commit-message: 'Update consumer template flake.lock'
@@ -1457,14 +1457,14 @@ jobs:
 
 ### Governance Migration (`migrate-governance.yml`)
 
-This reusable workflow automates the migration of existing governance repositories to NixLine baseline format using deterministic repository fetching.
+This reusable workflow automates the migration of existing governance repositories to Lineage baseline format using deterministic repository fetching.
 
-**Use Case:** Organizations wanting to convert their existing governance files (LICENSE, SECURITY.md, CODEOWNERS, etc.) into a complete NixLine baseline.
+**Use Case:** Organizations wanting to convert their existing governance files (LICENSE, SECURITY.md, CODEOWNERS, etc.) into a complete Lineage baseline.
 
 **Example Usage:**
 ```yaml
-# .github/workflows/create-nixline-baseline.yml
-name: Create NixLine Baseline from Governance
+# .github/workflows/create-lineage-baseline.yml
+name: Create Lineage Baseline from Governance
 
 on:
   workflow_dispatch:
@@ -1480,7 +1480,7 @@ on:
 
 jobs:
   migrate:
-    uses: NixLine-org/.github/.github/workflows/migrate-governance.yml@stable
+    uses: Lineage-org/.github/.github/workflows/migrate-governance.yml@stable
     with:
       governance-repo: ${{ github.server_url }}/${{ github.repository }}
       organization-name: ${{ inputs.organization-name }}
@@ -1491,7 +1491,7 @@ jobs:
 **Key Features:**
 - Uses `builtins.fetchGit` for deterministic repository fetching
 - Automatically detects project languages and existing governance files
-- Generates complete NixLine baseline with organization-specific configuration
+- Generates complete Lineage baseline with organization-specific configuration
 - Supports GitHub URLs, local paths, and private repositories
 - Creates downloadable artifacts or commits directly to repository
 - Provides comprehensive migration reports with next-step instructions
@@ -1503,14 +1503,14 @@ jobs:
 
 ### Test Governance Migration (`test-governance-migration.yml`)
 
-This reusable workflow tests whether a governance repository is compatible with NixLine migration before performing actual migration.
+This reusable workflow tests whether a governance repository is compatible with Lineage migration before performing actual migration.
 
-**Use Case:** Governance repositories wanting to validate their migration readiness and compatibility with NixLine.
+**Use Case:** Governance repositories wanting to validate their migration readiness and compatibility with Lineage.
 
 **Example Usage:**
 ```yaml
-# .github/workflows/test-nixline-migration.yml
-name: Test NixLine Migration Compatibility
+# .github/workflows/test-lineage-migration.yml
+name: Test Lineage Migration Compatibility
 
 on:
   push:
@@ -1521,7 +1521,7 @@ on:
 
 jobs:
   test-migration:
-    uses: NixLine-org/.github/.github/workflows/test-governance-migration.yml@stable
+    uses: Lineage-org/.github/.github/workflows/test-governance-migration.yml@stable
     with:
       organization-name: "Test Organization"
       organization-email: "admin@example.com"
@@ -1530,7 +1530,7 @@ jobs:
 
 **What It Tests:**
 - Repository structure analysis (languages, governance files, configuration files)
-- Migration compatibility with current NixLine baseline
+- Migration compatibility with current Lineage baseline
 - Generated baseline validation (when dry-run-only is false)
 - Edge case handling (empty repositories, missing files, permission issues)
 
@@ -1545,36 +1545,36 @@ jobs:
 # Test full migration with artifact generation
 jobs:
   full-test:
-    uses: NixLine-org/.github/.github/workflows/test-governance-migration.yml@stable
+    uses: Lineage-org/.github/.github/workflows/test-governance-migration.yml@stable
     with:
       organization-name: "Full Test Organization"
       organization-email: "test@example.com"
       security-email: "security@example.com"
       dry-run-only: false  # Generates actual baseline
-      baseline-ref: "github:yourorg/custom-nixline-baseline"
+      baseline-ref: "github:yourorg/custom-lineage-baseline"
 ```
 
 ### Supply Chain Security Workflows
 
-NixLine provides three reusable workflows that work together to automate nixpkgs dependency updates with validation and testing before promotion to stable. This implements the supply chain security best practices documented in SECURITY-BASELINE.md by pinning nixpkgs to specific commit hashes instead of branch references.
+Lineage provides three reusable workflows that work together to automate nixpkgs dependency updates with validation and testing before promotion to stable. This implements the supply chain security best practices documented in SECURITY-BASELINE.md by pinning nixpkgs to specific commit hashes instead of branch references.
 
 **Architecture Overview:**
 
 ```mermaid
 graph TD
-    A[Weekly Schedule<br/>Sunday 2 AM UTC] --> B[nixline-nixpkgs-update.yml]
+    A[Weekly Schedule<br/>Sunday 2 AM UTC] --> B[lineage-nixpkgs-update.yml]
     B --> C[Fetch Latest Commit<br/>from nixos-unstable]
     C --> D[Update flake.nix<br/>Pin to Commit Hash]
     D --> E[Update flake.lock]
     E --> F[Commit Changes]
     F --> G[Tag as unstable]
 
-    G --> H[nixline-nixpkgs-validate.yml]
+    G --> H[lineage-nixpkgs-validate.yml]
     H --> I[Checkout unstable Tag]
     I --> J[Run Comprehensive Tests]
     J --> K{All Tests Pass?}
 
-    K -->|Yes| L[nixline-nixpkgs-promote.yml]
+    K -->|Yes| L[lineage-nixpkgs-promote.yml]
     K -->|No| M[Create Issue<br/>Alert Maintainers]
 
     L --> N[Move stable Tag<br/>to unstable Commit]
@@ -1587,7 +1587,7 @@ graph TD
     style M fill:#ffcdd2
 ```
 
-#### Nixpkgs Update (`nixline-nixpkgs-update.yml`)
+#### Nixpkgs Update (`lineage-nixpkgs-update.yml`)
 
 Fetches the latest nixos-unstable commit hash and updates the baseline repository's flake.nix to pin to that specific commit. This replaces branch references with explicit commit hashes for better supply chain security.
 
@@ -1606,7 +1606,7 @@ permissions:
 
 jobs:
   update:
-    uses: NixLine-org/.github/.github/workflows/nixline-nixpkgs-update.yml@stable
+    uses: Lineage-org/.github/.github/workflows/lineage-nixpkgs-update.yml@stable
     with:
       unstable_tag: unstable
       target_branch: main
@@ -1620,7 +1620,7 @@ jobs:
 - Commits changes and tags as "unstable"
 - Triggers validation workflow automatically
 
-#### Nixpkgs Validate (`nixline-nixpkgs-validate.yml`)
+#### Nixpkgs Validate (`lineage-nixpkgs-validate.yml`)
 
 Runs comprehensive validation on the unstable tag before promoting to stable. This ensures that nixpkgs updates do not break baseline functionality.
 
@@ -1640,7 +1640,7 @@ permissions:
 
 jobs:
   validate:
-    uses: NixLine-org/.github/.github/workflows/nixline-nixpkgs-validate.yml@stable
+    uses: Lineage-org/.github/.github/workflows/lineage-nixpkgs-validate.yml@stable
     with:
       tag_to_validate: unstable
       promote_on_success: true
@@ -1655,7 +1655,7 @@ jobs:
 - On success: calls promote workflow
 - On failure: creates issue with error details
 
-#### Nixpkgs Promote (`nixline-nixpkgs-promote.yml`)
+#### Nixpkgs Promote (`lineage-nixpkgs-promote.yml`)
 
 Promotes a validated nixpkgs update by moving the stable tag to the unstable commit. This is called automatically by the validate workflow on successful validation.
 
@@ -1673,10 +1673,10 @@ The supply chain update pipeline provides explicit commit pinning in flake.nix f
 
 ## Forking for Your Organization
 
-When you fork NixLine for your organization, start by forking this repository:
+When you fork Lineage for your organization, start by forking this repository:
 
 ```bash
-gh repo fork NixLine-org/.github --org YOUR-ORG --fork-name .github
+gh repo fork Lineage-org/.github --org YOUR-ORG --fork-name .github
 cd .github
 ```
 
@@ -1746,7 +1746,7 @@ When you update workflows in this repo:
 
 ## Consumer Workflow Setup
 
-Consumer repositories are initialized using the baseline's template system. When you run `nix flake init -t github:YOUR-ORG/nixline-baseline` in a new repository, Nix copies files from the baseline's `templates/consumer/` directory, which includes the policy sync workflow preconfigured.
+Consumer repositories are initialized using the baseline's template system. When you run `nix flake init -t github:YOUR-ORG/lineage-baseline` in a new repository, Nix copies files from the baseline's `templates/consumer/` directory, which includes the policy sync workflow preconfigured.
 
 ### Policy Sync Workflow
 
@@ -1761,7 +1761,7 @@ on:
 
 jobs:
   sync:
-    uses: YOUR-ORG/.github/.github/workflows/nixline-policy-sync.yml@stable
+    uses: YOUR-ORG/.github/.github/workflows/lineage-policy-sync.yml@stable
 ```
 
 This calls the reusable workflow which handles checking, syncing and committing policy changes automatically.
@@ -1797,7 +1797,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v31
       - name: Verify policies are in sync
-        run: nix run github:YOUR-ORG/nixline-baseline#check
+        run: nix run github:YOUR-ORG/lineage-baseline#check
         # Note: Configuration files are automatically detected by the check command
 ```
 
@@ -1805,15 +1805,15 @@ jobs:
 
 ## Relationship to Baseline
 
-The `.github` repository and `nixline-baseline` repository serve different purposes:
+The `.github` repository and `lineage-baseline` repository serve different purposes:
 
 | Repository | Purpose | Contains |
 |------------|---------|----------|
 | `.github` | GitHub Actions automation | Reusable workflows |
-| `nixline-baseline` | Policy definitions | Nix packs, apps and templates |
+| `lineage-baseline` | Policy definitions | Nix packs, apps and templates |
 
 **Consumer repos reference both:**
-- **Flake input** → `nixline-baseline` (for policies)
+- **Flake input** → `lineage-baseline` (for policies)
 - **Workflow `uses:`** → `.github` (for CI automation)
 
 Example consumer `flake.nix`:
@@ -1821,8 +1821,8 @@ Example consumer `flake.nix`:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixline-baseline = {
-      url = "github:YOUR-ORG/nixline-baseline?ref=stable";
+    lineage-baseline = {
+      url = "github:YOUR-ORG/lineage-baseline?ref=stable";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -1839,7 +1839,7 @@ uses: YOUR-ORG/.github/.github/workflows/some-workflow.yml@stable
 
 ## CODEOWNERS for This Repository
 
-This repository should have its own CODEOWNERS file (NOT managed by NixLine packs):
+This repository should have its own CODEOWNERS file (NOT managed by Lineage packs):
 
 ```
 # .github/CODEOWNERS
@@ -1877,7 +1877,7 @@ The [`test-dependabot-updates.yml`](.github/workflows/test-dependabot-updates.ym
 - **Safety Assurance**: Prevents breaking dependency updates from reaching baseline repositories
 - **Automatic Execution**: Only runs on Dependabot PRs, requires no manual intervention
 
-This ensures that all GitHub Actions dependencies used across NixLine workflows remain functional after updates.
+This ensures that all GitHub Actions dependencies used across Lineage workflows remain functional after updates.
 
 ### Adding New Workflows
 

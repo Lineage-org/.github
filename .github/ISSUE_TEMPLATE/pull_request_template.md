@@ -20,7 +20,7 @@
 
 <!-- Check all that apply -->
 
-- [ ] NixLine Baseline
+- [ ] Lineage Baseline
 - [ ] Reusable Workflows
 - [ ] Policy Packs
 - [ ] Sync App

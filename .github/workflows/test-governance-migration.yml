@@ -31,10 +31,10 @@ on:
         type: boolean
         default: true
       baseline-ref:
-        description: 'NixLine baseline reference to test against'
+        description: 'Lineage baseline reference to test against'
         required: false
         type: string
-        default: 'github:NixLine-org/nixline-baseline'
+        default: 'github:Lineage-org/lineage-baseline'
 
 # Note: This workflow requires the following permissions:
 # permissions:
@@ -222,7 +222,7 @@ jobs:
             security_email="$org_email"
           fi
           if [ -z "$baseline_ref" ]; then
-            baseline_ref="github:NixLine-org/nixline-baseline"
+            baseline_ref="github:Lineage-org/lineage-baseline"
           fi
 
           echo "Testing governance migration with:"
@@ -253,7 +253,7 @@ jobs:
           # Create migration report file
           echo "Creating migration report..."
           {
-            echo "# NixLine Migration Compatibility Report"
+            echo "# Lineage Migration Compatibility Report"
             echo "Generated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
             echo ""
             echo "## Configuration"
@@ -275,7 +275,7 @@ jobs:
           if nix run "$baseline_ref#migrate-governance" -- "${migration_args[@]}"; then
             echo "" >> migration-report.md
             echo "## Result: PASSED" >> migration-report.md
-            echo "The repository is compatible with NixLine governance migration." >> migration-report.md
+            echo "The repository is compatible with Lineage governance migration." >> migration-report.md
             echo "[FOUND] Migration compatibility test PASSED" >> $GITHUB_STEP_SUMMARY
             echo "success=true" >> $GITHUB_OUTPUT
           else
@@ -326,7 +326,7 @@ jobs:
             security_email="$org_email"
           fi
           if [ -z "$baseline_ref" ]; then
-            baseline_ref="github:NixLine-org/nixline-baseline"
+            baseline_ref="github:Lineage-org/lineage-baseline"
           fi
 
           echo "## Full Migration Test" >> $GITHUB_STEP_SUMMARY
@@ -352,7 +352,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
 
           # Check essential files
-          essential_files=("flake.nix" ".nixline.toml" "lib" "apps")
+          essential_files=("flake.nix" ".lineage.toml" "lib" "apps")
           for file in "${essential_files[@]}"; do
             if [[ -e "$file" ]]; then
               echo "[FOUND] Essential file present: $file" >> $GITHUB_STEP_SUMMARY
@@ -381,7 +381,7 @@ jobs:
         if: ${{ inputs.dry-run-only != true }}
         uses: actions/upload-artifact@v5
         with:
-          name: nixline-baseline-${{ github.repository_owner }}-${{ github.run_number }}
+          name: lineage-baseline-${{ github.repository_owner }}-${{ github.run_number }}
           path: |
             ./generated-baseline/
           retention-days: 7
@@ -399,7 +399,7 @@ jobs:
 
           ## Migration Readiness Assessment
 
-          This repository has been analyzed for NixLine governance migration compatibility.
+          This repository has been analyzed for Lineage governance migration compatibility.
 
           ### Repository Analysis
           - **Languages**: ${{ needs.analyze-governance.outputs.languages-count }} programming languages detected
@@ -418,19 +418,19 @@ jobs:
 
           **Run Full Migration:**
           ```bash
-          nix run github:NixLine-org/nixline-baseline#migrate-governance -- \
+          nix run github:Lineage-org/lineage-baseline#migrate-governance -- \
             --governance-repo https://github.com/${{ github.repository }} \
             --org-name "Your Organization Name" \
             --org-email "admin@yourorg.com" \
-            --output-dir ./nixline-baseline
+            --output-dir ./lineage-baseline
           ```
 
           **Create Your Baseline Repository:**
           ```bash
-          gh repo create yourorg/nixline-baseline --public
-          cd nixline-baseline
-          git init && git add . && git commit -m "Initial NixLine baseline from governance migration"
-          git remote add origin https://github.com/yourorg/nixline-baseline
+          gh repo create yourorg/lineage-baseline --public
+          cd lineage-baseline
+          git init && git add . && git commit -m "Initial Lineage baseline from governance migration"
+          git remote add origin https://github.com/yourorg/lineage-baseline
           git push -u origin main
           git tag stable && git push origin stable
           ```
@@ -439,8 +439,8 @@ jobs:
           ```bash
           mkdir test-consumer && cd test-consumer
           echo "[packs]
-          enabled = [\"license\", \"codeowners\"]" > .nixline.toml
-          nix run github:yourorg/nixline-baseline#sync
+          enabled = [\"license\", \"codeowners\"]" > .lineage.toml
+          nix run github:yourorg/lineage-baseline#sync
           ```' ||
 
           '#### Migration compatibility issues detected
@@ -454,9 +454,9 @@ jobs:
           After making fixes, re-run this workflow to test compatibility.' }}
 
           ### Resources
-          - [NixLine Documentation](https://github.com/NixLine-org/nixline-baseline#governance-migration)
-          - [Migration Guide](https://github.com/NixLine-org/nixline-baseline#governance-migration)
-          - [Reusable Workflows](https://github.com/NixLine-org/.github)
+          - [Lineage Documentation](https://github.com/Lineage-org/lineage-baseline#governance-migration)
+          - [Migration Guide](https://github.com/Lineage-org/lineage-baseline#governance-migration)
+          - [Reusable Workflows](https://github.com/Lineage-org/.github)
           EOF
 
       - name: Edge case testing guidance
@@ -502,26 +502,26 @@ jobs:
 
           **1. Run Full Migration:**
           ```bash
-          nix run github:NixLine-org/nixline-baseline#migrate-governance -- \
+          nix run github:Lineage-org/lineage-baseline#migrate-governance -- \
             --governance-repo https://github.com/yourorg/governance \
             --org-name "Your Organization" \
             --org-email "admin@yourorg.com" \
-            --output-dir ./nixline-baseline
+            --output-dir ./lineage-baseline
           ```
 
           **2. Set Up Consumer Repository Testing:**
           Use these workflows to test your consumer repositories:
 
-          - **CI Testing**: `nixline-ci.yml` - validates policy compliance and runs checks
-          - **Policy Sync**: `nixline-policy-sync.yml` - automatically syncs policies from baseline
-          - **Pre-commit**: `nixline-pre-commit.yml` - enforces policy compliance before commits
+          - **CI Testing**: `lineage-ci.yml` - validates policy compliance and runs checks
+          - **Policy Sync**: `lineage-policy-sync.yml` - automatically syncs policies from baseline
+          - **Pre-commit**: `lineage-pre-commit.yml` - enforces policy compliance before commits
 
           **3. Create Baseline Repository:**
           ```bash
-          gh repo create yourorg/nixline-baseline --public
-          cd nixline-baseline
-          git init && git add . && git commit -m "Initial NixLine baseline"
-          git remote add origin https://github.com/yourorg/nixline-baseline
+          gh repo create yourorg/lineage-baseline --public
+          cd lineage-baseline
+          git init && git add . && git commit -m "Initial Lineage baseline"
+          git remote add origin https://github.com/yourorg/lineage-baseline
           git push -u origin main
           git tag stable && git push origin stable
           ```

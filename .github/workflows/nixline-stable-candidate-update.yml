@@ -1,5 +1,5 @@
 #
-# NixLine Stable Candidate Update (reusable)
+# Lineage Stable Candidate Update (reusable)
 #
 # Updates the .stable-candidate file to track commits ready for promotion.
 # Creates PRs for stable candidate updates and auto-merges them with proper
@@ -9,7 +9,7 @@
 # Purpose: Centralized stable candidate tracking logic
 #
 
-name: NixLine Stable Candidate Update (reusable)
+name: Lineage Stable Candidate Update (reusable)
 
 on:
   workflow_call:

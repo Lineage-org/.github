@@ -1,8 +1,8 @@
-# Reusable GitHub Actions workflow for NixLine governance migration
-# This workflow migrates existing governance repositories to create custom NixLine baselines
+# Reusable GitHub Actions workflow for Lineage governance migration
+# This workflow migrates existing governance repositories to create custom Lineage baselines
 # Uses Nix-idiomatic fetchGit for deterministic repository fetching
 
-name: NixLine Governance Migration
+name: Lineage Governance Migration
 
 on:
   workflow_call:
@@ -76,7 +76,7 @@ jobs:
         id: migrate
         run: |
           # Run migration with URL - Nix will handle fetching via builtins.fetchGit
-          migration_cmd="nix run github:NixLine-org/nixline-baseline#migrate-governance --"
+          migration_cmd="nix run github:Lineage-org/lineage-baseline#migrate-governance --"
           migration_cmd="$migration_cmd --governance-repo '${{ inputs.governance-repo }}'"
           migration_cmd="$migration_cmd --org-name '${{ inputs.organization-name }}'"
           migration_cmd="$migration_cmd --org-email '${{ inputs.organization-email }}'"
@@ -120,7 +120,7 @@ jobs:
             echo "**Generated Packs:** $pack_count" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
 
-            if [[ -f "./migrated-baseline/.nixline.toml" ]]; then
+            if [[ -f "./migrated-baseline/.lineage.toml" ]]; then
               echo "✅ Baseline configuration generated" >> $GITHUB_STEP_SUMMARY
             fi
 
@@ -137,7 +137,7 @@ jobs:
         if: inputs.output-mode == 'artifact' && inputs.dry-run != true
         uses: actions/upload-artifact@v5
         with:
-          name: nixline-baseline-${{ github.run_number }}
+          name: lineage-baseline-${{ github.run_number }}
           path: |
             ./migrated-baseline/
             !./migrated-baseline/.git
@@ -148,7 +148,7 @@ jobs:
         run: |
           # Copy migrated baseline to repository root
           cp -r ./migrated-baseline/* .
-          cp -r ./migrated-baseline/.nixline.toml . 2>/dev/null || true
+          cp -r ./migrated-baseline/.lineage.toml . 2>/dev/null || true
 
           # Configure git
           git config --local user.email "action@github.com"
@@ -168,7 +168,7 @@ jobs:
 
           # Copy migrated baseline
           cp -r ./migrated-baseline/* .
-          cp -r ./migrated-baseline/.nixline.toml . 2>/dev/null || true
+          cp -r ./migrated-baseline/.lineage.toml . 2>/dev/null || true
 
           # Configure git and commit
           git config --local user.email "action@github.com"

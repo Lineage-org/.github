@@ -1,6 +1,6 @@
-name: NixLine Policy Sync with PR (reusable) - DEPRECATED
+name: Lineage Policy Sync with PR (reusable) - DEPRECATED
 
-# ⚠️ DEPRECATED: Use nixline-policy-sync-smart.yml instead
+# ⚠️ DEPRECATED: Use lineage-policy-sync-smart.yml instead
 # This workflow is maintained for backward compatibility only
 # The smart workflow provides all PR functionality plus:
 # - Automatic fallback between direct push and PR modes
@@ -26,12 +26,12 @@ on:
         description: 'Baseline repository (for direct consumption pattern)'
         required: false
         type: string
-        default: 'NixLine-org/nixline-baseline'
+        default: 'Lineage-org/lineage-baseline'
       config_file:
         description: 'Configuration file path (for configuration-driven pattern)'
         required: false
         type: string
-        default: '.nixline.toml'
+        default: '.lineage.toml'
       create_pr:
         description: 'Create PR instead of direct push'
         required: false
@@ -139,7 +139,7 @@ jobs:
           commit-message: |
             Policy Sync from baseline
 
-            Automated policy sync from nixline-baseline@${{ inputs.baseline_ref }}
+            Automated policy sync from lineage-baseline@${{ inputs.baseline_ref }}
 
             Changes:
             ${{ steps.git-check.outputs.changed_files }}
@@ -147,7 +147,7 @@ jobs:
           body: |
             ## Policy Sync Update
 
-            This PR contains automated policy updates from the NixLine baseline repository.
+            This PR contains automated policy updates from the Lineage baseline repository.
 
             **Baseline Reference:** `${{ inputs.baseline_ref }}`
             **Consumption Pattern:** `${{ inputs.consumption_pattern }}`
@@ -166,7 +166,7 @@ jobs:
 
             ---
 
-            🤖 This PR was created automatically by the NixLine policy sync workflow.
+            🤖 This PR was created automatically by the Lineage policy sync workflow.
           branch: policy-sync-${{ github.run_number }}
           delete-branch: true
           labels: |
@@ -184,7 +184,7 @@ jobs:
           git add .editorconfig .github/ LICENSE SECURITY.md .pre-commit-config.yaml
           git commit -m "Policy Sync from baseline
 
-          Automated policy sync from nixline-baseline@${{ inputs.baseline_ref }}"
+          Automated policy sync from lineage-baseline@${{ inputs.baseline_ref }}"
           git push
 
       - name: Create issue on sync failure

@@ -1,5 +1,5 @@
 #
-# NixLine Nixpkgs Update (reusable)
+# Lineage Nixpkgs Update (reusable)
 #
 # Updates nixpkgs to latest versions and creates unstable tags for testing.
 # Fetches latest nixpkgs commits and creates tagged versions for
@@ -10,7 +10,7 @@
 # Features: Latest nixpkgs fetching, unstable tag creation, commit tracking
 #
 
-name: NixLine Nixpkgs Update (reusable)
+name: Lineage Nixpkgs Update (reusable)
 
 on:
   workflow_call:

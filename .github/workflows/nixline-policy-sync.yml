@@ -1,6 +1,6 @@
-name: NixLine Policy Sync (reusable) - DEPRECATED
+name: Lineage Policy Sync (reusable) - DEPRECATED
 
-# ⚠️ DEPRECATED: Use nixline-policy-sync-smart.yml instead
+# ⚠️ DEPRECATED: Use lineage-policy-sync-smart.yml instead
 # This workflow is maintained for backward compatibility only
 # The smart workflow provides:
 # - Automatic fallback from direct push to PR
@@ -25,7 +25,7 @@ on:
         description: 'Baseline repository (for direct consumption pattern)'
         required: false
         type: string
-        default: 'NixLine-org/nixline-baseline'
+        default: 'Lineage-org/lineage-baseline'
       packs:
         description: 'Comma-separated list of packs to sync (overrides defaults)'
         required: false
@@ -100,7 +100,7 @@ jobs:
           git add -A
           git commit -m "sync policies from baseline
 
-          Automated policy sync from nixline-baseline@${{ inputs.baseline_ref }}"
+          Automated policy sync from lineage-baseline@${{ inputs.baseline_ref }}"
           git push
 
       - name: Create issue on sync failure

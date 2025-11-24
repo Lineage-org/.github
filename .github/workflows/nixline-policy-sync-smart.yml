@@ -1,5 +1,5 @@
 #
-# NixLine Policy Sync Smart (reusable)
+# Lineage Policy Sync Smart (reusable)
 #
 # Intelligently synchronizes policy files from baseline repository to consumer
 # repositories with automatic fallback strategies. Attempts direct push first,
@@ -11,7 +11,7 @@
 # Features: Direct push, PR fallback, merge conflict handling, rate limit protection
 #
 
-name: NixLine Policy Sync Smart (reusable)
+name: Lineage Policy Sync Smart (reusable)
 
 on:
   workflow_call:
@@ -30,12 +30,12 @@ on:
         description: 'Baseline repository (for direct consumption pattern)'
         required: false
         type: string
-        default: 'NixLine-org/nixline-baseline'
+        default: 'Lineage-org/lineage-baseline'
       config_file:
         description: 'Configuration file path (for configuration-driven pattern)'
         required: false
         type: string
-        default: '.nixline.toml'
+        default: '.lineage.toml'
       prefer_pr:
         description: 'Always create PR even if direct push would work'
         required: false
@@ -293,7 +293,7 @@ jobs:
           body: |
             ## 🔄 Automated Policy Sync
 
-            This PR contains automated policy updates from the NixLine baseline repository.
+            This PR contains automated policy updates from the Lineage baseline repository.
 
             ### Configuration
             - **Baseline**: `${{ inputs.baseline_repo }}@${{ inputs.baseline_ref }}`
@@ -318,7 +318,7 @@ jobs:
 
             ---
 
-            🤖 This PR was created by the NixLine smart policy sync workflow.
+            🤖 This PR was created by the Lineage smart policy sync workflow.
             ${{ steps.pull.outputs.has_conflicts == 'true' && '
 
             ⚠️ **Note**: This PR contains merge conflicts that need manual resolution.' || '' }}

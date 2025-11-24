@@ -22,7 +22,7 @@ Instead, please report security vulnerabilities responsibly:
 
 ### For Critical Vulnerabilities
 
-Email: [security@nixline.org](mailto:security@nixline.org)
+Email: [security@lineage.org](mailto:security@lineage.org)
 
 Include:
 - Description of the vulnerability
@@ -69,7 +69,7 @@ Include:
 
 ### Baseline Repository Security
 
-When forking NixLine for your organization:
+When forking Lineage for your organization:
 
 1. **Repository Access Control**
    - Limit admin access to 2-3 security team members
@@ -108,7 +108,7 @@ When forking NixLine for your organization:
 
 ### Trust Model
 
-NixLine follows a hierarchical trust model:
+Lineage follows a hierarchical trust model:
 
 ```
 Organization Security Team
@@ -158,10 +158,10 @@ Security updates are announced through:
 
 ## Contact
 
-- **Security Team**: [security@nixline.org](mailto:security@nixline.org)
-- **General Questions**: [support@nixline.org](mailto:support@nixline.org)
-- **Project Issues**: [GitHub Issues](https://github.com/NixLine-org/nixline-baseline/issues)
+- **Security Team**: [security@lineage.org](mailto:security@lineage.org)
+- **General Questions**: [support@lineage.org](mailto:support@lineage.org)
+- **Project Issues**: [GitHub Issues](https://github.com/Lineage-org/lineage-baseline/issues)
 
 ---
 
-*This security policy applies to all repositories in the NixLine-org organization.*
+*This security policy applies to all repositories in the Lineage-org organization.*

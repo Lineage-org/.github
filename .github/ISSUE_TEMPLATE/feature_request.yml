@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest an idea or enhancement for NixLine
+description: Suggest an idea or enhancement for Lineage
 title: "[FEATURE] "
 labels: ["enhancement", "needs-triage"]
 assignees: []
@@ -28,7 +28,7 @@ body:
       label: Component
       description: Which component would this feature affect?
       options:
-        - NixLine Baseline
+        - Lineage Baseline
         - Reusable Workflows
         - Policy Packs
         - Sync App
@@ -70,7 +70,7 @@ body:
       label: Proposed Solution
       description: Describe the solution you'd like to see
       placeholder: |
-        I would like NixLine to support...
+        I would like Lineage to support...
         The feature should work like...
     validations:
       required: true
@@ -90,11 +90,11 @@ body:
       label: Impact Scope
       description: Who would benefit from this feature?
       options:
-        - All NixLine users
+        - All Lineage users
         - Organizations using baseline repositories
         - Organizations using direct consumption
         - Organizations using template pattern
-        - Developers working on NixLine itself
+        - Developers working on Lineage itself
         - Specific use case (explain below)
     validations:
       required: true

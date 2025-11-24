@@ -1,5 +1,5 @@
 #
-# NixLine Pre-commit (reusable)
+# Lineage Pre-commit (reusable)
 #
 # Runs pre-commit hooks for code quality and consistency checks.
 # Executes configured pre-commit hooks and optionally auto-commits
@@ -10,7 +10,7 @@
 # Features: Pre-commit hook execution, auto-fix commits, quality validation
 #
 
-name: NixLine Pre-commit (reusable)
+name: Lineage Pre-commit (reusable)
 
 on:
   workflow_call:

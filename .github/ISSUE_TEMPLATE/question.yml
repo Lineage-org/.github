@@ -1,5 +1,5 @@
 name: Question
-description: Ask a question about using NixLine
+description: Ask a question about using Lineage
 title: "[QUESTION] "
 labels: ["question", "needs-triage"]
 assignees: []
@@ -29,7 +29,7 @@ body:
       description: What is your question about?
       options:
         - Getting Started
-        - Configuration (.nixline.toml)
+        - Configuration (.lineage.toml)
         - Consumption Patterns (direct, template-based)
         - Policy Packs
         - Migration from existing governance
@@ -46,9 +46,9 @@ body:
     id: experience
     attributes:
       label: Experience Level
-      description: How familiar are you with NixLine?
+      description: How familiar are you with Lineage?
       options:
-        - New to NixLine
+        - New to Lineage
         - Basic understanding
         - Intermediate user
         - Advanced user
@@ -81,12 +81,12 @@ body:
     id: consumption
     attributes:
       label: Consumption Pattern
-      description: How are you using NixLine? (if applicable)
+      description: How are you using Lineage? (if applicable)
       options:
         - Direct Consumption (github:org/baseline#sync)
-        - Configuration-Driven (.nixline.toml)
+        - Configuration-Driven (.lineage.toml)
         - Template-Based (flake.nix)
-        - Planning to use NixLine
+        - Planning to use Lineage
         - Not applicable
     validations:
       required: false
@@ -118,14 +118,14 @@ body:
       description: Share any relevant configuration files or commands
       render: toml
       placeholder: |
-        # .nixline.toml
+        # .lineage.toml
         [organization]
         name = "..."
 
   - type: input
     id: version
     attributes:
-      label: NixLine Version
+      label: Lineage Version
       description: What version are you using?
       placeholder: "stable, unstable, or commit hash"
 

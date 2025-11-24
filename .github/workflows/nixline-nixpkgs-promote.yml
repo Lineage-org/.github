@@ -1,5 +1,5 @@
 #
-# NixLine Nixpkgs Promote (reusable)
+# Lineage Nixpkgs Promote (reusable)
 #
 # Promotes nixpkgs versions between different stability levels (unstable → stable).
 # Manages nixpkgs version promotion lifecycle for organizations using pinned
@@ -10,7 +10,7 @@
 # Features: Source tag promotion, target tag creation, validation steps
 #
 
-name: NixLine Nixpkgs Promote (reusable)
+name: Lineage Nixpkgs Promote (reusable)
 
 on:
   workflow_call:
