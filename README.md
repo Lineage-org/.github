@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="lineage_banner.png" alt="Lineage — Policy Governance via Nix" width="100%">
+</p>
+
 # Lineage Reusable Workflows
 
 [![Validate Workflows](https://github.com/Lineage-org/.github/actions/workflows/validate-workflows.yml/badge.svg)](https://github.com/Lineage-org/.github/actions/workflows/validate-workflows.yml)
