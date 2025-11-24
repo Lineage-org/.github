@@ -107,8 +107,8 @@ jobs:
           Previous $TARGET_BRANCH commit: ${{ steps.check.outputs.target_commit }}"
           fi
 
-          # Push the updated branch
-          git push origin $TARGET_BRANCH
+          # Push the updated branch (explicitly to branch ref to avoid tag ambiguity)
+          git push origin HEAD:refs/heads/$TARGET_BRANCH
 
       - name: Handle merge conflicts
         if: failure() && steps.check.outputs.sync_needed == 'true'
