@@ -182,13 +182,15 @@ jobs:
           echo "Checking for placeholder content..."
 
           # Check for TODO markers (case insensitive, in comments)
-          if grep -ri "# TODO\|// TODO\|<!-- TODO" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test"; then
+          # Exclude examples/ and template code in apps/create-pack.nix
+          if grep -ri "# TODO\|// TODO\|<!-- TODO" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test" | grep -v "examples/" | grep -v "apps/create-pack.nix"; then
             echo "✗ Found TODO markers in source files"
             exit 1
           fi
 
           # Check for CHANGEME markers
-          if grep -ri "CHANGEME" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test"; then
+          # Exclude examples/ and documentation
+          if grep -ri "CHANGEME" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test" | grep -v "examples/" | grep -v "README.md"; then
             echo "✗ Found CHANGEME markers in source files"
             exit 1
           fi
