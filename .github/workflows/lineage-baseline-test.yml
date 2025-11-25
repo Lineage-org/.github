@@ -189,8 +189,8 @@ jobs:
           fi
 
           # Check for CHANGEME markers
-          # Exclude examples/ and documentation
-          if grep -ri "CHANGEME" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test" | grep -v "examples/" | grep -v "README.md"; then
+          # Exclude examples/, documentation, default values in templates, and migration/extraction tools
+          if grep -ri "CHANGEME" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test" | grep -v "examples/" | grep -v "README.md" | grep -v "CONTRIBUTING.md" | grep -v "SECURITY-BASELINE.md" | grep -v "apps/migrate-governance.nix" | grep -v "apps/extract-config.nix" | grep -v "lib/config-extractors.nix"; then
             echo "✗ Found CHANGEME markers in source files"
             exit 1
           fi
