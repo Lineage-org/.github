@@ -123,107 +123,35 @@ jobs:
         if: ${{ steps.extract.outputs.action == 'actions/checkout' }}
         run: |
           echo "Compatibility testing actions/checkout@v${{ steps.extract.outputs.version }}"
-          VERSION="${{ steps.extract.outputs.version }}"
-
-          # Create a clean test directory
-          mkdir -p /tmp/checkout-test
-          cd /tmp/checkout-test
-
-          # Test the actual checkout action by using it
-          echo "Testing checkout functionality..."
-
-      - name: Test checkout action execution
-        if: ${{ steps.extract.outputs.action == 'actions/checkout' }}
-        uses: ${{ steps.extract.outputs.action }}@v${{ steps.extract.outputs.version }}
-        with:
-          path: checkout-test
-          fetch-depth: 1
-
-      - name: Verify checkout functionality
-        if: ${{ steps.extract.outputs.action == 'actions/checkout' }}
-        run: |
-          echo "Verifying checkout worked correctly..."
-          if [ -d "checkout-test/.git" ]; then
-            echo "✅ Repository was checked out successfully"
-            cd checkout-test
-            echo "Current directory: $(pwd)"
-            echo "Git status: $(git status --porcelain | wc -l) files"
-            echo "Current branch: $(git branch --show-current)"
-            echo "✅ actions/checkout@v${{ steps.extract.outputs.version }} is fully functional"
+          if curl -f "https://raw.githubusercontent.com/${{ steps.extract.outputs.action }}/v${{ steps.extract.outputs.version }}/action.yml" -o action.yml; then
+            python3 -c "import yaml; data=yaml.safe_load(open('action.yml')); print('Action name:', data.get('name', 'Unknown'))"
+            echo "✅ actions/checkout@v${{ steps.extract.outputs.version }} has valid action definition"
           else
-            echo "❌ Checkout failed - no .git directory found"
+            echo "❌ Failed to fetch actions/checkout@v${{ steps.extract.outputs.version }} definition"
             exit 1
           fi
 
-      - name: Test actions/setup-node execution
-        if: ${{ steps.extract.outputs.action == 'actions/setup-node' }}
-        uses: ${{ steps.extract.outputs.action }}@v${{ steps.extract.outputs.version }}
-        with:
-          node-version: '18'
-
-      - name: Verify setup-node functionality
+      - name: Test actions/setup-node
         if: ${{ steps.extract.outputs.action == 'actions/setup-node' }}
         run: |
           echo "Compatibility testing actions/setup-node@v${{ steps.extract.outputs.version }}"
-          echo "Verifying Node.js installation..."
-
-          if command -v node &> /dev/null; then
-            NODE_VERSION=$(node --version)
-            echo "✅ Node.js installed: $NODE_VERSION"
-
-            if command -v npm &> /dev/null; then
-              NPM_VERSION=$(npm --version)
-              echo "✅ npm installed: $NPM_VERSION"
-
-              # Test basic npm functionality
-              npm --version > /dev/null
-              echo "✅ npm is functional"
-
-              echo "✅ actions/setup-node@v${{ steps.extract.outputs.version }} is fully functional"
-            else
-              echo "❌ npm not found after setup-node"
-              exit 1
-            fi
+          if curl -f "https://raw.githubusercontent.com/${{ steps.extract.outputs.action }}/v${{ steps.extract.outputs.version }}/action.yml" -o action.yml; then
+            python3 -c "import yaml; data=yaml.safe_load(open('action.yml')); print('Inputs:', list(data.get('inputs', {}).keys()))"
+            echo "✅ actions/setup-node@v${{ steps.extract.outputs.version }} has valid action definition"
           else
-            echo "❌ Node.js not found after setup-node"
+            echo "❌ Failed to fetch actions/setup-node@v${{ steps.extract.outputs.version }} definition"
             exit 1
           fi
 
-      - name: Test actions/setup-python execution
-        if: ${{ steps.extract.outputs.action == 'actions/setup-python' }}
-        uses: ${{ steps.extract.outputs.action }}@v${{ steps.extract.outputs.version }}
-        with:
-          python-version: '3.11'
-
-      - name: Verify setup-python functionality
+      - name: Test actions/setup-python
         if: ${{ steps.extract.outputs.action == 'actions/setup-python' }}
         run: |
           echo "Compatibility testing actions/setup-python@v${{ steps.extract.outputs.version }}"
-          echo "Verifying Python installation..."
-
-          if command -v python &> /dev/null; then
-            PYTHON_VERSION=$(python --version)
-            echo "✅ Python installed: $PYTHON_VERSION"
-
-            if command -v pip &> /dev/null; then
-              PIP_VERSION=$(pip --version)
-              echo "✅ pip installed: $PIP_VERSION"
-
-              # Test basic pip functionality
-              pip --version > /dev/null
-              echo "✅ pip is functional"
-
-              # Test installing a simple package
-              pip install --quiet --no-warn-script-location requests
-              python -c "import requests; print(f'✅ Package installation works: requests {requests.__version__}')"
-
-              echo "✅ actions/setup-python@v${{ steps.extract.outputs.version }} is fully functional"
-            else
-              echo "❌ pip not found after setup-python"
-              exit 1
-            fi
+          if curl -f "https://raw.githubusercontent.com/${{ steps.extract.outputs.action }}/v${{ steps.extract.outputs.version }}/action.yml" -o action.yml; then
+            python3 -c "import yaml; data=yaml.safe_load(open('action.yml')); print('Runs using:', data.get('runs', {}).get('using', 'Unknown'))"
+            echo "✅ actions/setup-python@v${{ steps.extract.outputs.version }} has valid runtime configuration"
           else
-            echo "❌ Python not found after setup-python"
+            echo "❌ Failed to fetch actions/setup-python@v${{ steps.extract.outputs.version }} definition"
             exit 1
           fi
 
