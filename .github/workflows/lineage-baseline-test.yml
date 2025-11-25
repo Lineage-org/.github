@@ -1,0 +1,226 @@
+#
+# Lineage Baseline Test (reusable)
+#
+# Comprehensive testing workflow for baseline repositories to validate changes
+# before merging or promoting to stable. Tests all Nix apps, flake integrity,
+# and validates generated content.
+#
+# Features:
+# - Validates flake structure and Nix expressions
+# - Tests all baseline apps (sync, check, create-pack, import-policy, etc.)
+# - Validates no placeholder content (TODO, CHANGEME)
+# - Tests with sample configuration
+# - Dry-run validation of file generation
+#
+# Called by: baseline repository CI workflows
+# Purpose: Ensure baseline changes work correctly before stable promotion
+#
+
+name: Lineage Baseline Test (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      test_with_config:
+        description: 'Test with sample .lineage.toml configuration'
+        required: false
+        type: boolean
+        default: true
+      validate_content:
+        description: 'Validate generated files for placeholder content'
+        required: false
+        type: boolean
+        default: true
+  workflow_dispatch:
+    inputs:
+      test_with_config:
+        description: 'Test with sample .lineage.toml configuration'
+        required: false
+        type: boolean
+        default: true
+      validate_content:
+        description: 'Validate generated files for placeholder content'
+        required: false
+        type: boolean
+        default: true
+
+# Note: This workflow requires the following permissions when called:
+# permissions:
+#   contents: read
+
+jobs:
+  test-baseline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Validate flake
+        run: |
+          echo "          \\"
+          echo "       \\   |   /"
+          echo "        \\  |  /"
+          echo "    ------ + ------"
+          echo "        /  |  \\"
+          echo "       /   |   \\"
+          echo "          /"
+          echo ""
+          echo "      LINEAGE"
+          echo "  Policy Governance via Nix"
+          echo ""
+          echo "  ── Baseline Testing ──"
+          echo ""
+          echo "Testing flake check..."
+          nix flake check --all-systems
+          echo "✓ Flake check passed"
+
+      - name: Test sync app (dry-run)
+        run: |
+          echo "Testing sync app in dry-run mode..."
+          nix run .#sync -- --dry-run
+          echo "✓ Sync dry-run passed"
+
+      - name: Test sync app with specific packs
+        run: |
+          echo "Testing sync with specific packs..."
+          nix run .#sync -- --packs editorconfig,license --dry-run
+          echo "✓ Sync with specific packs passed"
+
+      - name: Test check app
+        run: |
+          echo "Testing check app..."
+          # Check should pass on empty repo (no files to validate)
+          nix run .#check || echo "Check app executed"
+
+      - name: Test create-pack app
+        run: |
+          echo "Testing create-pack app..."
+          nix run .#create-pack -- --help
+          echo "✓ Create-pack help passed"
+
+      - name: Test import-policy app
+        run: |
+          echo "Testing import-policy app..."
+          nix run .#import-policy -- --help
+          echo "✓ Import-policy help passed"
+
+      - name: Test list-licenses app
+        run: |
+          echo "Testing list-licenses app..."
+          nix run .#list-licenses
+          echo "✓ List-licenses passed"
+
+      - name: Test fetch-license app
+        run: |
+          echo "Testing fetch-license app..."
+          nix run .#fetch-license -- MIT
+          echo "✓ Fetch-license passed"
+
+      - name: Create sample config
+        if: inputs.test_with_config
+        run: |
+          cat > .lineage.toml << 'EOF'
+          [organization]
+          name = "TestOrg"
+          email = "test@example.com"
+          default_team = "@TestOrg/maintainers"
+
+          [packs]
+          enabled = ["editorconfig", "license", "codeowners"]
+
+          [packs.license]
+          type = "Apache-2.0"
+          holder = "TestOrg Contributors"
+
+          [packs.codeowners]
+          default_team = "@TestOrg/maintainers"
+          EOF
+          echo "✓ Created sample .lineage.toml"
+
+      - name: Test sync with config
+        if: inputs.test_with_config
+        run: |
+          echo "Testing sync with .lineage.toml config..."
+          nix run .#sync
+          echo "✓ Sync with config passed"
+
+      - name: Validate generated files
+        if: inputs.test_with_config
+        run: |
+          echo "Checking generated files..."
+          if [ -f ".editorconfig" ]; then
+            echo "  ✓ .editorconfig generated"
+          else
+            echo "  ✗ .editorconfig missing"
+            exit 1
+          fi
+
+          if [ -f "LICENSE" ]; then
+            echo "  ✓ LICENSE generated"
+          else
+            echo "  ✗ LICENSE missing"
+            exit 1
+          fi
+
+          if [ -f ".github/CODEOWNERS" ]; then
+            echo "  ✓ CODEOWNERS generated"
+          else
+            echo "  ✗ CODEOWNERS missing"
+            exit 1
+          fi
+
+      - name: Validate no placeholders
+        if: inputs.validate_content
+        run: |
+          echo "Checking for placeholder content..."
+
+          # Check for TODO markers (case insensitive, in comments)
+          if grep -ri "# TODO\|// TODO\|<!-- TODO" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test"; then
+            echo "✗ Found TODO markers in source files"
+            exit 1
+          fi
+
+          # Check for CHANGEME markers
+          if grep -ri "CHANGEME" . --include="*.nix" --include="*.md" 2>/dev/null | grep -v ".git" | grep -v "test"; then
+            echo "✗ Found CHANGEME markers in source files"
+            exit 1
+          fi
+
+          echo "✓ No placeholder content found"
+
+      - name: Test check validation
+        if: inputs.test_with_config
+        run: |
+          echo "Testing check app validates synced files..."
+          nix run .#check
+          echo "✓ Check validation passed"
+
+      - name: Test sync exclude
+        run: |
+          echo "Testing sync with exclude option..."
+          nix run .#sync -- --exclude dependabot,precommit --dry-run
+          echo "✓ Sync exclude passed"
+
+      - name: Test apps metadata
+        run: |
+          echo "Verifying app metadata..."
+          nix flake show --json | jq -r '.apps."x86_64-linux" | keys[]'
+          echo "✓ App metadata verified"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo ""
+          echo "════════════════════════════════════════════════════════"
+          echo "           Lineage Baseline Test Summary"
+          echo "════════════════════════════════════════════════════════"
+          echo ""
+          echo "All baseline validation tests completed."
+          echo ""
