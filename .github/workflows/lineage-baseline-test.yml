@@ -133,7 +133,7 @@ jobs:
           default_team = "@TestOrg/maintainers"
 
           [packs]
-          enabled = ["editorconfig", "license", "codeowners"]
+          enabled = ["editorconfig", "license", "codeowners", "security", "precommit", "dependabot"]
 
           [packs.license]
           type = "Apache-2.0"
@@ -231,3 +231,17 @@ jobs:
           echo ""
           echo "All baseline validation tests completed."
           echo ""
+
+          # GitHub Actions Step Summary
+          echo "## Lineage Baseline Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Tests Executed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Flake validation (nix flake check)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ App testing (sync, check, create-pack, import-policy, fetch-license, list-licenses)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Configuration support (with sample .lineage.toml)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ File generation validation" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Content validation (no TODO/CHANGEME placeholders)" >> $GITHUB_STEP_SUMMARY
+          echo "- ✓ Pack selection (--packs, --exclude)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**[SUCCESS]** All baseline validation tests completed" >> $GITHUB_STEP_SUMMARY
