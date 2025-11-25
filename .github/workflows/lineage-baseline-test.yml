@@ -120,7 +120,7 @@ jobs:
       - name: Test fetch-license app
         run: |
           echo "Testing fetch-license app..."
-          nix run .#fetch-license -- MIT
+          nix run .#fetch-license -- MIT --year 2025 --holder "Test Organization"
           echo "✓ Fetch-license passed"
 
       - name: Create sample config
