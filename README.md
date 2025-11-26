@@ -207,6 +207,7 @@ This repository provides several reusable workflows for Lineage automation. Each
 | `lineage-pre-commit.yml` | Pre-commit hooks | Consumer repos | Code formatting |
 | `update-stable-tag.yml` | Auto-update stable tags | Baseline repos | Tag automation |
 | `validate-workflows.yml` | Validate YAML and GitHub Actions syntax | Any repo | Workflow quality control |
+| `lineage-baseline-test.yml` | **Comprehensive baseline testing with config support** | Baseline repos | Baseline validation |
 | `test-dependabot-updates.yml` | **Test Dependabot dependency updates** | .github repo | Dependency safety testing |
 | `lineage-flake-lock-update.yml` | Update flake.lock files | Any repo with flakes | Dependency management |
 | `migrate-governance.yml` | Migrate governance repositories | Organizations | Governance migration |
@@ -1260,7 +1261,7 @@ Maintains proper branch hierarchy by syncing main branch changes into unstable b
 **Features:**
 - Fast-forward and three-way merging support
 - Automatic conflict detection and issue creation
-- Works only with branches, never touches tags
+- Automatically updates unstable tag to track branch after successful sync
 - Validates sync results after completion
 - Comprehensive logging and status reporting
 
@@ -1286,8 +1287,6 @@ jobs:
       target_branch: unstable
       source_branch: main
 ```
-
-**Important:** This workflow only operates on branches. It never pushes to or modifies the `unstable` or `stable` tags.
 
 ### Stable Tag Updates (`update-stable-tag.yml`)
 
