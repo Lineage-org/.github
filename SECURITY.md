@@ -22,7 +22,7 @@ Instead, please report security vulnerabilities responsibly:
 
 ### For Critical Vulnerabilities
 
-Email: [security@lineage.org](mailto:security@lineage.org)
+Email: [security@lineage.run](mailto:security@lineage.run)
 
 Include:
 - Description of the vulnerability
@@ -158,8 +158,8 @@ Security updates are announced through:
 
 ## Contact
 
-- **Security Team**: [security@lineage.org](mailto:security@lineage.org)
-- **General Questions**: [support@lineage.org](mailto:support@lineage.org)
+- **Security Team**: [security@lineage.run](mailto:security@lineage.run)
+- **General Questions**: [support@lineage.run](mailto:support@lineage.run)
 - **Project Issues**: [GitHub Issues](https://github.com/Lineage-org/lineage-baseline/issues)
 
 ---
