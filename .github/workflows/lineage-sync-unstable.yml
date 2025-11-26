@@ -69,10 +69,10 @@ jobs:
           # Check if unstable is behind main
           if git merge-base --is-ancestor $SOURCE_COMMIT $TARGET_COMMIT; then
             echo "sync_needed=false" >> $GITHUB_OUTPUT
-            echo "✅ $TARGET_BRANCH is ahead of $SOURCE_BRANCH - no sync needed"
+            echo "[OK] $TARGET_BRANCH is ahead of $SOURCE_BRANCH - no sync needed"
           else
             echo "sync_needed=true" >> $GITHUB_OUTPUT
-            echo "🔄 $TARGET_BRANCH needs to be synced with $SOURCE_BRANCH"
+            echo "[SYNC] $TARGET_BRANCH needs to be synced with $SOURCE_BRANCH"
 
             # Check if this would be a fast-forward merge
             if git merge-base --is-ancestor $TARGET_COMMIT $SOURCE_COMMIT; then
@@ -172,11 +172,30 @@ jobs:
 
           # Verify that target branch now contains all commits from source branch
           if git merge-base --is-ancestor $SOURCE_COMMIT $NEW_TARGET_COMMIT; then
-            echo "✅ Sync successful: $TARGET_BRANCH now contains all commits from $SOURCE_BRANCH"
+            echo "[OK] Sync successful: $TARGET_BRANCH now contains all commits from $SOURCE_BRANCH"
           else
-            echo "❌ Sync verification failed: $TARGET_BRANCH does not contain all commits from $SOURCE_BRANCH"
+            echo "[FAIL] Sync verification failed: $TARGET_BRANCH does not contain all commits from $SOURCE_BRANCH"
             exit 1
           fi
+
+      - name: Update unstable tag
+        if: steps.check.outputs.sync_needed == 'true' && success() && inputs.target_branch == 'unstable'
+        run: |
+          TARGET_BRANCH="${{ inputs.target_branch }}"
+
+          echo "Updating $TARGET_BRANCH tag to track branch..."
+
+          # Delete existing tag locally and remotely
+          git tag -d $TARGET_BRANCH 2>/dev/null || true
+          git push origin :refs/tags/$TARGET_BRANCH 2>/dev/null || true
+
+          # Create new tag at current HEAD
+          git tag -a $TARGET_BRANCH -m "Auto-update $TARGET_BRANCH tag to $(git rev-parse --short HEAD)"
+
+          # Push new tag
+          git push origin refs/tags/$TARGET_BRANCH
+
+          echo "[SUCCESS] Updated $TARGET_BRANCH tag to $(git rev-parse HEAD)"
 
       - name: Summary
         run: |
