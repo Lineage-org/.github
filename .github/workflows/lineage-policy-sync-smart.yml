@@ -77,10 +77,7 @@ jobs:
           fetch-depth: 0  # Full history for better conflict resolution
 
       - name: Install Nix
-        uses: cachix/install-nix-action@v31
-        with:
-          extra_nix_config: |
-            experimental-features = nix-command flakes
+        uses: DeterminateSystems/nix-installer-action@v21
 
       - name: Setup Git
         run: |
@@ -158,8 +155,11 @@ jobs:
 
       - name: Materialize policy files
         id: sync
+        continue-on-error: true
         run: |
           echo "## Policy Materialization" >> $GITHUB_STEP_SUMMARY
+
+          set +e # Allow command to fail (exit code capture)
 
           case "${{ inputs.consumption_pattern }}" in
             template-based)
@@ -177,7 +177,19 @@ jobs:
               ;;
           esac
 
-          echo "✅ Policy files materialized" >> $GITHUB_STEP_SUMMARY
+          EXIT_CODE=$?
+          echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+
+          if [ $EXIT_CODE -eq 0 ]; then
+             echo "✅ Policy files materialized (Clean)" >> $GITHUB_STEP_SUMMARY
+             echo "has_sync_conflicts=false" >> $GITHUB_OUTPUT
+          elif [ $EXIT_CODE -eq 1 ]; then
+             echo "⚠️ Policy files materialized (With 3-Way Merge Conflicts)" >> $GITHUB_STEP_SUMMARY
+             echo "has_sync_conflicts=true" >> $GITHUB_OUTPUT
+          else
+             echo "❌ Policy materialization failed" >> $GITHUB_STEP_SUMMARY
+             exit $EXIT_CODE
+          fi
 
       - name: Validate materialized files
         id: validate
@@ -195,19 +207,19 @@ jobs:
           done
 
           # Validate LICENSE has copyright holder
-          if [[ -f "LICENSE" ]] && grep -q "CHANGEME\|TODO" LICENSE; then
+          if [[ -f "LICENSE" ]] && grep -q "CHANGEME|TODO" LICENSE; then
             echo "❌ LICENSE contains placeholder text" >> $GITHUB_STEP_SUMMARY
             ERRORS=$((ERRORS + 1))
           fi
 
           # Validate SECURITY.md has contact email
-          if [[ -f "SECURITY.md" ]] && grep -q "security@example.com\|CHANGEME" SECURITY.md; then
+          if [[ -f "SECURITY.md" ]] && grep -q "security@example.com|CHANGEME" SECURITY.md; then
             echo "❌ SECURITY.md contains placeholder email" >> $GITHUB_STEP_SUMMARY
             ERRORS=$((ERRORS + 1))
           fi
 
           # Validate CODEOWNERS if present
-          if [[ -f ".github/CODEOWNERS" ]] && grep -q "@CHANGEME\|@TODO" .github/CODEOWNERS; then
+          if [[ -f ".github/CODEOWNERS" ]] && grep -q "@CHANGEME|@TODO" .github/CODEOWNERS; then
             echo "❌ CODEOWNERS contains placeholder teams" >> $GITHUB_STEP_SUMMARY
             ERRORS=$((ERRORS + 1))
           fi
@@ -250,6 +262,7 @@ jobs:
         if: |
           steps.changes.outputs.has_changes == 'true' &&
           steps.pull.outputs.has_conflicts != 'true' &&
+          steps.sync.outputs.has_sync_conflicts != 'true' &&
           !inputs.prefer_pr
         continue-on-error: true
         run: |
@@ -277,7 +290,7 @@ jobs:
         id: create_pr
         if: |
           steps.changes.outputs.has_changes == 'true' &&
-          (steps.direct_push.outputs.push_success != 'true' || inputs.prefer_pr || steps.pull.outputs.has_conflicts == 'true')
+          (steps.direct_push.outputs.push_success != 'true' || inputs.prefer_pr || steps.pull.outputs.has_conflicts == 'true' || steps.sync.outputs.has_sync_conflicts == 'true')
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -302,7 +315,7 @@ jobs:
 
             ### Validation Results
             - Content validation errors: **${{ steps.validate.outputs.validation_errors }}**
-            ${{ steps.pull.outputs.has_conflicts == 'true' && '- ⚠️ **Manual merge conflict resolution required**' || '- ✅ No merge conflicts' }}
+            ${{ (steps.pull.outputs.has_conflicts == 'true' || steps.sync.outputs.has_sync_conflicts == 'true') && '- ⚠️ **Manual merge conflict resolution required**' || '- ✅ No merge conflicts' }}
 
             ### Changed Files
             ```
@@ -319,16 +332,16 @@ jobs:
             ---
 
             🤖 This PR was created by the Lineage smart policy sync workflow.
-            ${{ steps.pull.outputs.has_conflicts == 'true' && '
-
-            ⚠️ **Note**: This PR contains merge conflicts that need manual resolution.' || '' }}
+            ${{ (steps.pull.outputs.has_conflicts == 'true' ||
+                 steps.sync.outputs.has_sync_conflicts == 'true') &&
+                '⚠️ **Note**: This PR contains merge conflicts that need manual resolution.' || '' }}
           branch: policy-sync-${{ github.run_number }}
           delete-branch: true
           labels: |
             automated
             policy-sync
             lineage
-            ${{ steps.pull.outputs.has_conflicts == 'true' && 'has-conflicts' || '' }}
+            ${{ (steps.pull.outputs.has_conflicts == 'true' || steps.sync.outputs.has_sync_conflicts == 'true') && 'has-conflicts' || '' }}
             ${{ steps.validate.outputs.validation_errors > 0 && 'needs-review' || '' }}
 
       - name: Enable auto-merge on PR
@@ -336,6 +349,7 @@ jobs:
           steps.create_pr.outputs.pull-request-number &&
           inputs.auto_merge &&
           steps.pull.outputs.has_conflicts != 'true' &&
+          steps.sync.outputs.has_sync_conflicts != 'true' &&
           steps.validate.outputs.validation_errors == 0
         run: |
           echo "## Auto-Merge Configuration" >> $GITHUB_STEP_SUMMARY
@@ -354,33 +368,38 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create issue for conflicts
-        if: steps.pull.outputs.has_conflicts == 'true'
+        if: steps.pull.outputs.has_conflicts == 'true' || steps.sync.outputs.has_sync_conflicts == 'true'
         uses: actions/github-script@v7
         with:
           script: |
+            const body = [
+              "## Manual Intervention Required",
+              "",
+              "The automated policy sync encountered merge conflicts that require manual resolution.",
+              "",
+              "**Pull Request**: #" + "${{ steps.create_pr.outputs.pull-request-number || 'N/A' }}",
+              "**Baseline**: `" + "${{ inputs.baseline_repo }}@${{ inputs.baseline_ref }}" + "`",
+              "**Workflow Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "",
+              "### Next Steps",
+              "",
+              "1. Check out the PR branch locally",
+              "2. Resolve merge conflicts manually",
+              "3. Push the resolved changes",
+              "4. The PR will auto-merge once conflicts are resolved and CI passes",
+              "",
+              "### Common Conflict Causes",
+              "- Local customizations conflicting with baseline updates",
+              "- Concurrent edits to policy files",
+              "- Format changes in baseline that conflict with local changes",
+              "- **3-Way Merge Conflict**: Baseline update conflicted with local changes"
+            ].join('\n');
+
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'Policy sync requires manual conflict resolution',
-              body: `## Manual Intervention Required
-
-            The automated policy sync encountered merge conflicts that require manual resolution.
-
-            **Pull Request**: #${{ steps.create_pr.outputs.pull-request-number || 'N/A' }}
-            **Baseline**: \`${{ inputs.baseline_repo }}@${{ inputs.baseline_ref }}\`
-            **Workflow Run**: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-            ### Next Steps
-
-            1. Check out the PR branch locally
-            2. Resolve merge conflicts manually
-            3. Push the resolved changes
-            4. The PR will auto-merge once conflicts are resolved and CI passes
-
-            ### Common Conflict Causes
-            - Local customizations conflicting with baseline updates
-            - Concurrent edits to policy files
-            - Format changes in baseline that conflict with local changes`,
+              body: body,
               labels: ['automated', 'policy-sync', 'merge-conflict', 'needs-attention']
             });
 
