@@ -310,6 +310,15 @@ jobs:
 
           echo "Updated $TARGET_TAG tag to $COMMIT"
 
+          # Handle SemVer tagging for stable releases (Marketplace compliance)
+          if [ "${{ inputs.promotion_target }}" == "stable" ]; then
+             echo "Updating v1 tag for GitHub Marketplace..."
+             git tag -d v1 2>/dev/null || true
+             git tag -a v1 -m "Release v1 (alias for stable): $COMMIT" $COMMIT
+             git push --force origin v1
+             echo "Updated v1 tag to $COMMIT"
+          fi
+
       # Note: Cleanup is handled by the audit trail step which updates .stable-candidate
       # and the branch cleanup is handled by the stable candidate update workflow
       # No additional cleanup needed here to avoid branch protection violations
@@ -366,6 +375,7 @@ jobs:
             TARGET_TAG="${{ inputs.promotion_target == 'stable' && inputs.stable_tag || inputs.promotion_target }}"
             echo "**$TARGET_TAG tag updated to:** \`${{ steps.candidate.outputs.commit_hash }}\`" >> $GITHUB_STEP_SUMMARY
             if [ "${{ inputs.promotion_target }}" == "stable" ]; then
+              echo "**v1 tag:** Updated (for Marketplace)" >> $GITHUB_STEP_SUMMARY
               echo "**Audit trail:** Commit created in main branch" >> $GITHUB_STEP_SUMMARY
               echo "**flake.lock:** Updated for consumers" >> $GITHUB_STEP_SUMMARY
             else
