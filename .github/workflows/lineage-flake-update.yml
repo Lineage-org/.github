@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: DeterminateSystems/determinate-nix-action@v3.13.2
-      - uses: DeterminateSystems/update-flake-lock@v24
+      - uses: DeterminateSystems/update-flake-lock@v28
         with:
           pr-title: "${{ inputs.pr-title }}"
           pr-labels: "${{ inputs.pr-labels }}"
