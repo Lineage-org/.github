@@ -291,7 +291,7 @@ jobs:
         if: |
           steps.changes.outputs.has_changes == 'true' &&
           (steps.direct_push.outputs.push_success != 'true' || inputs.prefer_pr || steps.pull.outputs.has_conflicts == 'true' || steps.sync.outputs.has_sync_conflicts == 'true')
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: |
