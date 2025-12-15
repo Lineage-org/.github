@@ -135,7 +135,7 @@ jobs:
 
       - name: Upload migration artifacts
         if: inputs.output-mode == 'artifact' && inputs.dry-run != true
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: lineage-baseline-${{ github.run_number }}
           path: |
