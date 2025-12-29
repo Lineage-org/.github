@@ -31,7 +31,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: DeterminateSystems/determinate-nix-action@v3.13.2
+      - uses: DeterminateSystems/determinate-nix-action@v3.15.1
       - uses: actions/checkout@v6
       - name: Materialize selected packs
         env:
