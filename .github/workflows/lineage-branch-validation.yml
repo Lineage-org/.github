@@ -254,7 +254,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create or update PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           BRANCH_NAME: ${{ needs.update-unstable.outputs.branch_name }}
           COMMIT_HASH: ${{ needs.update-unstable.outputs.commit_hash }}
@@ -379,7 +379,7 @@ jobs:
             }
 
       - name: Close validation failure issues
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           BRANCH_NAME: ${{ needs.update-unstable.outputs.branch_name }}
         with:
@@ -421,7 +421,7 @@ jobs:
 
     steps:
       - name: Create or update validation failure issue
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         env:
           BRANCH_NAME: ${{ needs.update-unstable.outputs.branch_name }}
           COMMIT_HASH: ${{ needs.update-unstable.outputs.commit_hash }}
