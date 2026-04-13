@@ -369,7 +369,7 @@ jobs:
 
       - name: Create issue for conflicts
         if: steps.pull.outputs.has_conflicts == 'true' || steps.sync.outputs.has_sync_conflicts == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const body = [
