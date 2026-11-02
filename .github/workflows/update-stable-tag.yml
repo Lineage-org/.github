@@ -65,7 +65,7 @@ jobs:
           ref: ${{ inputs.target_branch }}
 
       - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@v22
+        uses: DeterminateSystems/nix-installer-action@v23
 
       - name: Setup Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@v15
